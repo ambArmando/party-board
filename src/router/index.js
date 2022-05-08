@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainMenu from '../components/MainMenu.vue'
-import BoardUI from '../components/BoardUI.vue'
 import BoardUIGrid from '../components/BoardUIGrid.vue'
+import Multiplayer from '../components/Multiplayer.vue'
+import MultiplayerLobby from '../components/MultiplayerLobby.vue'
 
 const routes = [
   {
@@ -11,13 +12,18 @@ const routes = [
   },
   {
     path: '/board',
-    name: 'BoardUI',
-    component: BoardUI
-  },
-  {
-    path: '/test',
     name: 'BoardUIGrid',
     component: BoardUIGrid
+  },
+  {
+    path: '/multiplayer',
+    name: 'Multiplayer',
+    component: Multiplayer
+  },
+  {
+    path: '/multiplayerLobby',
+    name: 'multiplayerLobby',
+    component: MultiplayerLobby
   }
 ]
 

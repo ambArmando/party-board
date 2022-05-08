@@ -3,23 +3,16 @@
         <h3 class="text">PARTY BOARD</h3>
         <div class="mainMenu">
             <table>
-                <tr>
-                    <td> <p>PLAYER 1 -</p> </td>
-                    <td> <input type="text" placeholder=" Enter your name" v-model="Player1.name"></td>
-                </tr>
-                <tr>
-                    <td> <p>PLAYER 2 -</p> </td>
-                    <td> <input type="text" placeholder=" Enter your name" v-model="Player2.name"></td>
-                </tr>
-                <tr v-for="(player, index) in players" :key="index" >
-                    <td> <p>PLAYER {{index + 3}} -</p> </td>
+                <tr v-for="(player, index) in players" :key="player" >
+                    <td> <p>PLAYER {{index + 1}} -</p> </td>
                     <td> <input type="text" placeholder=" Enter your name" v-model="player.name"></td>
-                    <td @click="removePlayerById(player.id)" class="crossSign"> X </td>
+                    <td v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class="crossSign"> X </td>
                 </tr>
             </table>
 
             <Button color="primary" size="medium" @click="addNewPlayer" :disabled="isDisabled"> ADD PLAYER </Button>
-            <Button v-if="players.length" @click="removePLayer" color="red" size="medium">REMOVE PLAYER</Button>
+            <Button v-if="players.length < 3 ? false : true" @click="removePLayer" color="red" size="medium">REMOVE PLAYER</Button>
+            <Button color="primary" size="medium" @click="multiplayerBtnHandler"> MULTIPLAYER </Button>
             <Button color="primary" class="btnPlay" @click="playButtonHandler">PLAY!</Button> 
 
             <div class="spacer"></div>
@@ -28,10 +21,9 @@
                 <Button color="transparent" @click="toggleHowToPlay" class="howToPlay">How to play</Button>
                 <div v-show="showHowToPlay" class="howToPlayText">
                     <p>{{howToPlayText}}</p> 
-                    <p>Green - light challange</p>
+                    <p>Green - easy challange</p>
                     <p>Orange - medium challange</p>
                     <p>Red - hard challange</p>
-                    <p>Yellow - surprise challange</p>
                 </div>
             </div>  
         </div>
@@ -50,17 +42,20 @@ export default {
 
     data() {
         return {
-            Player1: {name: '', id: 0, points: 1000, color: 'red'},
-            Player2: {name: '', id: 1, points: 1000, color: 'blue'},
             isDisabled: false,
             showHowToPlay: false,
             players: [],
-            id: 2,
+            id: 0,
             randomNames: ['bottle', 'water', 'camera', 'stamp', 'postcard', 'pencil', 'file', 'candy', 'potato', 'onion', 'leaf', 'coin', 'mop', 'key'],
-            randomColors: ['pink', 'purple', 'lightBlue', 'teal', 'peach', 'beige'],
-            usedColors: [],
+            randomColors: ['fuchsia', 'purple', 'lightBlue', 'lightgreen', 'tan', 'yellow', 'teal', 'indigo'],
             howToPlayText: 'Spin the dice and move to a square, depending on the box color a challange will pop up. Players have the ability to decline the challange but doing this will make them lose points. If the points get to 0 the player will be eliminated. '
         }
+    },
+
+    mounted() {
+        this.addNewPlayer();
+        this.addNewPlayer();
+        console.log(this.players);
     },
 
     methods: {
@@ -84,15 +79,19 @@ export default {
         },
 
         addNewPlayer() {
-            if (this.players.length > 5) {
+            if (this.players.length > 7) {
                 console.log("no more players");
                 this.isDisabled = true;
             } else {
                 this.players.push({
                     id: this.getID(),
                     name: '',
-                    points: 1000,
-                    color: this.getRandomColor()
+                    points: 100,
+                    color: this.getRandomColor(),
+                    i: null,
+                    j: null,
+                    lastI: null,
+                    lastJ: null
                 });
             }
         },
@@ -117,35 +116,26 @@ export default {
 
         playButtonHandler() {
 
-            if (this.Player1.name === '') {
-                this.Player1.name = this.getRandomName();
-            }
-
-            if (this.Player2.name === '') {
-                this.Player2.name = this.getRandomName();
-            }
-
             for (var i = 0; i < this.players.length; i++) {
                 if (this.players[i].name === '') {
                     this.players[i].name = this.getRandomName()
                 }
             }
 
-            let allPlayers = [];
-            allPlayers.push(this.Player1);
-            allPlayers.push(this.Player2);
-            if (this.players.length != 0) {
-                allPlayers.push(...this.players);
-            }
-            
-            this.$store.dispatch('setPlayersArray', allPlayers);
-            this.$router.push('test');
+            this.$store.dispatch('setPlayersArray', this.players);
+            this.$router.push('board');
+        },
+
+        multiplayerBtnHandler() {
+            this.$router.push('multiplayer');
         }
     },
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
+
+
 .mainMenu {
     display: flex;
     flex-direction: column;

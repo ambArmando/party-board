@@ -1,5 +1,5 @@
 import { createSimpleExpression } from 'vue/node_modules/@vue/compiler-core';
-import store from '../store'
+import store from '../../store'
 
 export default class Board {
     

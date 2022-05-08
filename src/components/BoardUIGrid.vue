@@ -5,55 +5,38 @@
       <table>
         <tr v-for="player in players" :key="player">
           <td>
-            {{ player.name }}
-            <span :class="player.color">{{ player.color }}</span> <br />
+            <span>{{ player.name }} <span :class="player.color"><p>{{ player.color }}</p></span> <br /></span> 
             Points: {{ player.points }}
           </td>
         </tr>
       </table>
     </aside>
     <main>
-      <div class="board-wrapper" ref="wrapper">
-        <p v-for="player in players" :key="player" :class="player.color">
-          {{ player.color }}
-        </p>
-        <canvas id="board"> </canvas>
-      </div>
-      <div>
-        <button class="dice" ref="dice" :class="{'clicked': clicked}">dice</button>
-      </div>
+      <BoardVue/>
     </main>
   </div>
 </template>
 
 <script>
-import Board from "./Board.js";
+import BoardVue from "./Board.vue";
 
 export default {
+
+  components: {
+    BoardVue
+  },    
+
   data: () => ({
     players: [],
     board: null,
     canvasWidth: 0,
     canvasHeight: 0,
-    clicked: false,
   }),
 
   mounted() {
     this.players = this.$store.getters.getPlayers;
-    var canvas = document.getElementById("board");
-    setTimeout(() => {
-      this.board = new Board(canvas, this.$refs.wrapper, this.$refs.dice);
-      this.board.start();
-    }, 2000);
-    
   },
 
-  methods: {
-    getRandomNumber() {
-      this.clicked = !this.clicked;
-      return Math.ceil(Math.random() * 6);
-    },
-  },
 };
 </script>
 
@@ -110,63 +93,67 @@ table {
       text-align: center;
       padding: 20px;
       span {
-        &.red {
-          color: red;
+        &.indigo {
+          color: #4b0082;
         }
-        &.blue {
-          color: blue;
+        &.teal {
+          color: #008080;
         }
         &.purple {
-          color: #573391;
+          color: #4606ad;
         }
-        &.pink {
+        &.fuchsia {
           color: #fc28fb;
         }
         &.lightBlue {
           color: #00b4d8;
         }
-        &.teal {
+        &.lightgreen {
           color: #11746a;
         }
-        &.peach {
-          color: #ffaaa5;
+        &.tan {
+          color: #d2b48c;
         }
-        &.beige {
-          color: #d29d2b;
+        &.yellow {
+          color: #fffb14;
         }
       }
     }
   }
 }
 
-p {
-    display: inline;
-    font-size: 24px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    padding: 4px;
-  &.red {
-    color: red;
+span {
+  p {
+      display: inline;
+      font-size: 18px;
+      font-weight: 500;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	  
+      padding: 4px;
+      &.indigo {
+        color: #4b0082;
+      }
+      &.teal {
+        color: #008080;
+      }
+      &.purple {
+        color: #4606ad;
+      }
+      &.fuchsia {
+        color: #fc28fb;
+      }
+      &.lightBlue {
+        color: #00b4d8;
+      }
+      &.lightgreen {
+      color: #11746a;
+      }
+      &.tan {
+        color: #d2b48c;
+      }
+      &.yellow {
+        color: #fffb14;
+      }
+    }
   }
-  &.blue {
-    color: blue;
-  }
-  &.purple {
-    color: #573391;
-  }
-  &.pink {
-    color: #fc28fb;
-  }
-  &.lightBlue {
-    color: #00b4d8;
-  }
-  &.teal {
-    color: #11746a;
-  }
-  &.peach {
-    color: #ffaaa5;
-  }
-  &.beige {
-    color: #d29d2b;
-  }
-}
 </style>
