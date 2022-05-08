@@ -43,7 +43,7 @@ export default {
 		togglePopup: false,
 		eliminatedPlayersCount: 0,
 		disableDice: false,
-		socket: io('http://localhost:3000'),
+		// socket: io('http://localhost:3000'),
 		grid: [[3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			   [1, 0, 0, 1, 1, 1, 1, 0, 0, 0], 
@@ -57,6 +57,7 @@ export default {
 	}),
 
 	mounted() {
+
 		for (let player of this.players) {
 			this.$store.dispatch('setPlayerPosition', {
 				player: player,
@@ -66,8 +67,15 @@ export default {
 			console.log(player);
 		}
 
-		this.socket.on("update-current-player", (currentPlayer) => {
+		this.sockett.on("update-current-player", (currentPlayer, diceValue, currentPlayerIndex) => {
 			console.log("current player venit de la server catre room", currentPlayer);
+			this.$store.dispatch('setPlayerPosition', {
+				player: currentPlayer,
+				i: currentPlayer.i,
+				j: currentPlayer.j
+			});
+			this.currentDiceValue = diceValue;
+			this.currentPlayerIndex = currentPlayerIndex;
 		});
 
 		this.start();
@@ -76,6 +84,7 @@ export default {
 	computed: {
 		...mapGetters({
 			players: 'getPlayers',
+			sockett: 'getSocket'
 		}) 
 	},
 
@@ -156,11 +165,16 @@ export default {
 				for (let move of possibleMoves) {
 				   // console.log("current move being checked: " + move);
 					if ((move[0] != lastJ || move[1] != lastI)) {
+						console.log("inainte",currentPlayer);
 						this.$store.dispatch('setPlayerPosition', {
 							player: currentPlayer,
 							i: move[1],
 							j: move[0]
 						});
+						console.log("dupa",currentPlayer);
+						let updatedPlayers = this.$store.getters.getPlayers;
+						console.log("updated players", updatedPlayers);
+						this.moveCurrentPlayerServer(currentPlayer, diceValue, this.$store.getters.getRoomName, this.currentPlayerIndex);
 						lastI = currentPlayer.lastI;
 						lastJ = currentPlayer.lastJ;
 						i = move[1];
@@ -168,8 +182,8 @@ export default {
 						//console.log('next: ' +  i, j);
 						break;
 					}
-					
 				} 
+
 				if (currentPlayer.i === 0 && currentPlayer.j === 0) {
 					console.log(currentPlayer.name + " won!!");
 					return;
@@ -177,7 +191,9 @@ export default {
 			}
 			//	console.log("current i: " + currentPlayer.i);
 			//	console.log("current j: " + currentPlayer.j);
-			this.moveCurrentPlayerServer(currentPlayer, diceValue, this.$store.getters.getRoomName);
+			
+			//TODO cand pases in moveCurrentPlayerServer this.currentPLayerIndex el se updateaza doar dupa ce s a apasat pe 
+			// done/decline challange de vazut cum sa fac sa pasez currentPlayerIndexu cum trebe
 			this.computeChallange(currentPlayer.i, currentPlayer.j); 
 			this.togglePopup = true;
 		},
@@ -242,7 +258,6 @@ export default {
 
 			this.checkPlayerPoints(currentPlayer);
 			this.nextAvailablePlayer();
-			
         },
 
 		doneChallange() {
@@ -277,10 +292,10 @@ export default {
 			}
 		},
 
-		moveCurrentPlayerServer(currentPlayer, diceValue, roomName) {
+		moveCurrentPlayerServer(currentPlayer, diceValue, roomName, currentPlayerIndex) {
 			console.log("current player", currentPlayer);
 			console.log(diceValue, roomName);
-			this.socket.emit("move-current-player", currentPlayer, diceValue, roomName);
+			this.sockett.emit("move-current-player", currentPlayer, diceValue, roomName, currentPlayerIndex);
 		},
 
 		start() {

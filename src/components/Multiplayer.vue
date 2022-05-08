@@ -58,6 +58,9 @@ export default {
 		},
 
 	mounted() {
+
+		this.$store.dispatch('setSocket', this.socket);
+
 		this.socket.on("receive-message", message => {
 			console.log("receive", message);
 			this.messages.push(message);

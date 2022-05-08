@@ -6,7 +6,8 @@ export default createStore({
     //togglePopup: false,
     currentPlayerIndex: 0,
     connectedPlayers: [],
-    roomName: ''
+    roomName: '',
+    socket: ''
   },
   mutations: {
     setPlayers(state, payload){
@@ -29,11 +30,14 @@ export default createStore({
       state.currentPlayerIndex = payload;
     },
     setConnectedPlayers(state, payload) {
-      state.connectedPlayers = payload
+      state.connectedPlayers = payload;
     },
     setRoom(state, payload) {
       state.roomName = payload;
-    }
+    },
+    setSocket(state, payload) {
+      state.socket = payload;
+    },
   },
   actions: {
     setPlayersArray(context, payload) {
@@ -54,7 +58,10 @@ export default createStore({
     },
     setRoom(context, payload) {
       context.commit('setRoom', payload);
-    }
+    },
+    setSocket(context, payload) {
+      context.commit('setSocket', payload);
+    },
   },
   modules: {
   },
@@ -63,6 +70,7 @@ export default createStore({
    // getTogglePopup: state => state.togglePopup,
     //getCurrentPlayerIndex: state => state.currentPlayerIndex
     getRoomPlayers: state => state.connectedPlayers,
-    getRoomName: state => state.roomName
+    getRoomName: state => state.roomName,
+    getSocket: state => state.socket
   }
 })
