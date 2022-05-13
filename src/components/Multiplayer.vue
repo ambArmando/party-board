@@ -119,7 +119,7 @@ export default {
 				this.connectedPlayers.push({
 					id: this.getID(),
                 	name: player,
-                	points: 1000,
+                	points: 400,
                 	color: playersColors[index],
                 	i: null,
                 	j: null,
@@ -143,6 +143,7 @@ export default {
 
 	methods: {
 		joinRoomBtn() {
+			this.$store.dispatch('setIsMultiplayer', true);
 			this.socket.emit("join-room", this.roomName, this.playerName); 
 			this.joinRoomBtnPressed = !this.joinRoomBtnPressed;
 			//this.socket.emit("get-connected-players", this.roomName);

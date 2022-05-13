@@ -46,6 +46,7 @@ export default {
             showHowToPlay: false,
             players: [],
             id: 0,
+            isMultiplayer: false,
             randomNames: ['bottle', 'water', 'camera', 'stamp', 'postcard', 'pencil', 'file', 'candy', 'potato', 'onion', 'leaf', 'coin', 'mop', 'key'],
             randomColors: ['fuchsia', 'purple', 'lightBlue', 'lightgreen', 'tan', 'yellow', 'teal', 'indigo'],
             howToPlayText: 'Spin the dice and move to a square, depending on the box color a challange will pop up. Players have the ability to decline the challange but doing this will make them lose points. If the points get to 0 the player will be eliminated. '
@@ -122,11 +123,13 @@ export default {
                 }
             }
 
+            this.$store.dispatch('setIsMultiplayer', false);
             this.$store.dispatch('setPlayersArray', this.players);
             this.$router.push('board');
         },
 
         multiplayerBtnHandler() {
+            this.$store.dispatch('setIsMultiplayer', true);
             this.$router.push('multiplayer');
         }
     },

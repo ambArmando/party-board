@@ -7,7 +7,8 @@ export default createStore({
     currentPlayerIndex: 0,
     connectedPlayers: [],
     roomName: '',
-    socket: ''
+    socket: '',
+    isMultiplayer: false,
   },
   mutations: {
     setPlayers(state, payload){
@@ -38,6 +39,9 @@ export default createStore({
     setSocket(state, payload) {
       state.socket = payload;
     },
+    setIsMultiplayer(state, payload) {
+      state.isMultiplayer = payload
+    }
   },
   actions: {
     setPlayersArray(context, payload) {
@@ -62,6 +66,9 @@ export default createStore({
     setSocket(context, payload) {
       context.commit('setSocket', payload);
     },
+    setIsMultiplayer(context, payload) {
+      context.commit('setIsMultiplayer', payload);
+    }
   },
   modules: {
   },
@@ -71,6 +78,7 @@ export default createStore({
     //getCurrentPlayerIndex: state => state.currentPlayerIndex
     getRoomPlayers: state => state.connectedPlayers,
     getRoomName: state => state.roomName,
-    getSocket: state => state.socket
+    getSocket: state => state.socket,
+    getIsMultiplayer: state => state.isMultiplayer,
   }
 })

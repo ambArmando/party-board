@@ -43,6 +43,7 @@ export default {
 		togglePopup: false,
 		eliminatedPlayersCount: 0,
 		disableDice: false,
+		//multiplayer: false,
 		// socket: io('http://localhost:3000'),
 		grid: [[3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -67,16 +68,42 @@ export default {
 			console.log(player);
 		}
 
-		this.sockett.on("update-current-player", (currentPlayer, diceValue, currentPlayerIndex) => {
-			console.log("current player venit de la server catre room", currentPlayer);
-			this.$store.dispatch('setPlayerPosition', {
-				player: currentPlayer,
-				i: currentPlayer.i,
-				j: currentPlayer.j
+		if (this.isMultiplayer) {
+			this.sockett.on("update-current-player", (currentPlayer, diceValue) => {
+				console.log("current player venit de la server catre room", currentPlayer);
+				this.$store.dispatch('setPlayerPosition', {
+					player: currentPlayer,
+					i: currentPlayer.i,
+					j: currentPlayer.j
+				});
+				this.currentDiceValue = diceValue;
+			});	
+		
+			this.sockett.on("current-player-index", (gameInfo) => {
+				console.log('game info', gameInfo);
+				this.currentPlayerIndex = gameInfo.currentPlayerIndex;
+				//this.players[this.currentPlayerIndex].points = gameInfo.points;
 			});
-			this.currentDiceValue = diceValue;
-			this.currentPlayerIndex = currentPlayerIndex;
-		});
+
+			this.sockett.on("playerInfo-declineChallange", (player, eliminatedPlayersCount) => {
+				for (let p of this.players) {
+					if (p.id === player.id) {
+						p.points = player.points;
+						p.name = player.name;
+					}
+				}
+				this.eliminatedPlayersCount = eliminatedPlayersCount;
+			});
+
+			this.sockett.on("disable-dice", () => {
+				this.disableDice = true;
+			});
+
+			this.sockett.on("game-over", (message) => {
+				this.disableDice = true;
+				console.log(message);
+			});
+		}
 
 		this.start();
 	},
@@ -84,7 +111,9 @@ export default {
 	computed: {
 		...mapGetters({
 			players: 'getPlayers',
-			sockett: 'getSocket'
+			sockett: 'getSocket',
+			isMultiplayer: 'getIsMultiplayer',
+			roomName: 'getRoomName'
 		}) 
 	},
 
@@ -150,6 +179,8 @@ export default {
 		},
 
 		moveCurrentPlayer() {
+			// this.disableDiceServer();
+			// this.disableDice = false;
 			const diceValue = this.getRandomNumber();
 			this.currentDiceValue = diceValue;
 			let currentPlayer = this.players[this.currentPlayerIndex];
@@ -165,16 +196,18 @@ export default {
 				for (let move of possibleMoves) {
 				   // console.log("current move being checked: " + move);
 					if ((move[0] != lastJ || move[1] != lastI)) {
-						console.log("inainte",currentPlayer);
+						//console.log("inainte",currentPlayer);
 						this.$store.dispatch('setPlayerPosition', {
 							player: currentPlayer,
 							i: move[1],
 							j: move[0]
 						});
-						console.log("dupa",currentPlayer);
-						let updatedPlayers = this.$store.getters.getPlayers;
-						console.log("updated players", updatedPlayers);
-						this.moveCurrentPlayerServer(currentPlayer, diceValue, this.$store.getters.getRoomName, this.currentPlayerIndex);
+						// console.log("dupa",currentPlayer);
+						// let updatedPlayers = this.$store.getters.getPlayers;
+						// console.log("updated players", updatedPlayers);
+						if (this.isMultiplayer) {
+							this.moveCurrentPlayerServer(currentPlayer, diceValue, this.$store.getters.getRoomName);
+						}
 						lastI = currentPlayer.lastI;
 						lastJ = currentPlayer.lastJ;
 						i = move[1];
@@ -255,14 +288,32 @@ export default {
 			}
 			currentPlayer.points -= challangeValue;
 			this.togglePopup = false;
+			this.playerInfoServer(currentPlayer, this.$store.getters.getRoomName);
 
 			this.checkPlayerPoints(currentPlayer);
 			this.nextAvailablePlayer();
+			if (this.isMultiplayer) {
+				let gameInfo = {
+					currentPlayerIndex: this.currentPlayerIndex,
+					room: this.$store.getters.getRoomName,
+				};
+				console.log("game info din declineChallange", gameInfo);
+				this.currentPlayerIndexServer(gameInfo);
+			}
         },
 
 		doneChallange() {
 			this.togglePopup = false;
 			this.nextAvailablePlayer();
+			if (this.isMultiplayer) {
+				let gameInfo = {
+					currentPlayerIndex: this.currentPlayerIndex,
+					room: this.$store.getters.getRoomName,
+				};
+				console.log("game info din doneChallange", gameInfo);
+				this.currentPlayerIndexServer(gameInfo);
+			}
+			
 		},
 
 		nextAvailablePlayer() {
@@ -280,12 +331,14 @@ export default {
 				currentPlayer.points = 0; 
 				currentPlayer.name = `${currentPlayer.name} eliminated :(`;
 				this.eliminatedPlayersCount += 1;
+				this.playerInfoServer(currentPlayer, this.$store.getters.getRoomName, this.eliminatedPlayersCount);
 		
 				if (this.players.length - 1 === this.eliminatedPlayersCount) {
 					for (let player of this.players) {
 						if (player.points != 0) {
 							console.log(player.name + " won!");
 							this.disableDice = true;
+							this.gameOverServer(player.name + " won!");
 						}
 					}
 				}
@@ -296,6 +349,22 @@ export default {
 			console.log("current player", currentPlayer);
 			console.log(diceValue, roomName);
 			this.sockett.emit("move-current-player", currentPlayer, diceValue, roomName, currentPlayerIndex);
+		},
+
+		currentPlayerIndexServer(gameInfo) {
+			this.sockett.emit("current-player-index", gameInfo);
+		},
+
+		playerInfoServer(player, room, eliminatedPlayersCount) {
+			this.sockett.emit("playerInfo-declineChallange", player, room, eliminatedPlayersCount);
+		},
+
+		gameOverServer(message) {
+			this.sockett.emit("game-over", message, this.$store.getters.getRoomName);
+		},
+
+		disableDiceServer() {
+			this.sockett.emit("disable-dice", this.roomName);
 		},
 
 		start() {
