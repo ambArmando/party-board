@@ -19,6 +19,7 @@
 
 <script>
 import BoardVue from "./Board.vue";
+import { mapGetters } from 'vuex';
 
 export default {
 
@@ -27,15 +28,21 @@ export default {
   },    
 
   data: () => ({
-    players: [],
+    // players: [],
     board: null,
     canvasWidth: 0,
     canvasHeight: 0,
   }),
 
-  mounted() {
-    this.players = this.$store.getters.getPlayers;
-  },
+  // mounted() {
+  //   this.players = this.$store.getters.getPlayers;
+  // },
+
+  computed: {
+		...mapGetters({
+			players: 'getPlayers',
+		}) 
+	},
 
 };
 </script>

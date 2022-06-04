@@ -1,18 +1,40 @@
 import { createStore } from 'vuex'
 
+
 export default createStore({
   state: {
     players: [],
+    currentGameState: {
+      players: [{}],
+      currentChallange: {
+        text: ""
+      },
+      currentState: '',
+      currentPlayerIndex: 0,
+      diceValue: 0,
+      eliminatedPlayersCount: 0
+    },
     //togglePopup: false,
     currentPlayerIndex: 0,
     connectedPlayers: [],
     roomName: '',
     socket: '',
     isMultiplayer: false,
+    thisPlayer: {}
   },
   mutations: {
     setPlayers(state, payload){
       state.players = payload;
+    },
+    setCurrentGameState(state, payload){
+      state.currentGameState = payload;
+    },
+    setThisPlayer(state, payload) {
+      state.thisPlayer = {
+        id: payload.id,
+        name: payload.name,
+        color: payload.color,
+      }
     },
     setPlayerPosition(state, payload) {
       for (let player of state.players) {
@@ -51,6 +73,12 @@ export default createStore({
     setPlayerPosition(context, args) {
       context.commit('setPlayerPosition', args);
     },
+    setCurrentGameState(context, args) {
+      context.commit('setCurrentGameState', args);
+    },
+    setThisPlayer(context, args) {
+      context.commit('setThisPlayer', args);
+    },
     // togglePopup(context, payload) {
     //   context.commit('togglePopup', payload);
     // },
@@ -80,5 +108,7 @@ export default createStore({
     getRoomName: state => state.roomName,
     getSocket: state => state.socket,
     getIsMultiplayer: state => state.isMultiplayer,
+    getThisPlayer: state => state.thisPlayer,
+    getCurrentGameState: state => state.currentGameState
   }
 })

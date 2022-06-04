@@ -62,14 +62,14 @@ export default {
     methods: {
 
         getRandomName() {
-            var randomNumber = Math.floor(Math.random() * this.randomNames.length);
+            let randomNumber = Math.floor(Math.random() * this.randomNames.length);
             let randomName = this.randomNames[randomNumber] + Math.floor(Math.random() * 100);
             this.randomNames.splice(randomNumber, 1);
             return randomName;
         },
 
         getRandomColor() {
-            var randomNumber = Math.floor(Math.random() * this.randomColors.length);
+            let randomNumber = Math.floor(Math.random() * this.randomColors.length);
             let randomColor = this.randomColors[randomNumber];
             this.randomColors.splice(randomNumber, 1)
             return randomColor;
