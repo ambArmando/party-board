@@ -1,6 +1,6 @@
 <template>
   <div>
-      <button :class="`${color} ${size}`">
+      <button :class="`${color} ${size} ${type}`">
           <slot></slot>   
       </button>
   </div>
@@ -11,14 +11,15 @@ export default {
   name: 'Button',
   props: { 
       color: String,
-      size: String
+      size: String,
+      type: String
    }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    $primary-color: #7161EF;
+    /*$primary-color: #7161EF;
     $error: #e74951;
 
     div {
@@ -68,5 +69,5 @@ export default {
                 }
             }
         }
-    }
+    }*/
 </style>

@@ -1,0 +1,38 @@
+.board-game {
+    display: flex;
+    height: 100vh;
+
+    .board-contents {
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+        flex-basis: 100%;
+        
+        .board-players {
+            flex-basis: 15%;
+        }
+
+        .board-wrapper {
+            padding: 0;
+            flex-basis: 65%;
+            overflow: hidden;
+            .canvas-wrapper {
+                display: flex;
+                justify-content: center;
+                flex-basis: 100%;
+                //border: 1px solid black;
+                width: 100%;
+                canvas {
+                    display: block;
+                    margin: 0;
+                    //width: 100%;
+                }
+            }
+        }
+        .board-chat {
+            display: flex;
+            flex-basis: 20%;
+            flex-direction: column;
+        }
+    }
+}

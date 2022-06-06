@@ -1,0 +1,12 @@
+.form-group-row {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    label {
+        flex: 0 0 auto;
+    }
+    
+    input {
+    }
+}

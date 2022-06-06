@@ -1,12 +1,23 @@
 <template>
-
+<div class="board-contents">
+	<div class="board-players">
+		<table>
+        <tr v-for="player in players" :key="player">
+          <td>
+            <span>{{ player.name }} <span :class="player.color"><p>{{ player.color }}</p></span> <br /></span> 
+            Points: {{ player.points }}
+          </td>
+        </tr>
+      </table>
+	</div>
 		 <div class="board-wrapper" ref="wrapper">
-			<canvas id="board" ref="canvas"> </canvas>
+			 <div class="canvas-wrapper">
+				<canvas id="board" ref="canvas"> </canvas>
+			 </div>
 		</div>
-		<div>
+		<div class="board-chat">
 			<br>
-			{{ isMyTurn }}
-			{{ currentGameState }}
+			
 			<p> {{players[currentPlayerIndex].name}}'s turn </p>
 			<button :disabled="!isMyTurn" @click="moveCurrentPlayer" class="dice" :class="{disabled: disableDice}">dice</button>
 			<p v-if="currentDiceValue > 0">Rolled {{currentDiceValue}}</p>
@@ -18,6 +29,8 @@
 				</div>
 			</Dialog>
 			<div class="chat-box" ref="chatBoxRef">
+				{{ canvasWidth }}
+				{{ canvasHeight }}
 				<ul>
 					<li v-for="message in messages" :key="message">
 						{{message}}
@@ -25,11 +38,11 @@
 				</ul>
 				<div v-if="isMultiplayer">
 					<input type="text" v-model="message" placeholder="Type something...">
-					<button @click="sendMessage"> send message</button>
+					<button class="btn" @click="sendMessage"> send message</button>
 				</div>
 			</div>
 		</div>
-	
+</div>	
 </template>
 
 <script>
@@ -157,10 +170,16 @@ export default {
 			let rect = this.$refs.wrapper.getBoundingClientRect();
 			this.board = this.$refs.canvas;
 			this.ctx = this.board.getContext("2d");
-			this.canvasWidth = rect.width;
+			
+			/*this.canvasWidth = rect.width;
 			this.canvasHeight = rect.height;
+*/			console.log(rect.height);
+			const min = Math.floor(Math.min(rect.height, rect.width));
+			this.canvasWidth = min;
+			this.canvasHeight = min;//Math.min(this.canvasWidth, rect.height);
+
 			this.board.width = this.canvasWidth;
-			this.board.height = this.canvasHeight - 10;
+			this.board.height = this.canvasHeight;
 			this.computeSquareSize();
 		},
 
@@ -196,7 +215,7 @@ export default {
 
 		computeSquareSize() {
 			let size = Math.min(this.canvasWidth, this.canvasHeight);
-			this.squareSize = size / (this.grid[0].length + 2);
+			this.squareSize = size / (this.grid[0].length);
 		},
 
 		renderDebug() {
@@ -405,7 +424,7 @@ export default {
 </script>
 
 <style scoped>
-
+/*
 	.board-wrapper {
 		display: inline-block;
 		width: 75%;
@@ -452,6 +471,6 @@ export default {
 		width: 100%;
 		height: 400px;
 	}
-
+*/
 
 </style>

@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@300;400;700&display=swap');
+
+$font-primary: 'Montserrat', sans-serif;
+$font-secondary: 'Roboto', sans-serif;
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-primary;
+}
+
+button {
+    font-family: $font-primary;
+    font-weight: 700;
+}
+
+p, a, input, label {
+    font-family: $font-secondary;
+}

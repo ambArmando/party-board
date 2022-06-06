@@ -1,26 +1,51 @@
 <template>
-	<div class="container">
-		<div class="content">
-			<div class="items" v-if="!joinRoomBtnPressed || !createRoomBtnPressed">
-				<input type="text" placeholder="Enter your name" v-model="playerName">
-				<input type="text" placeholder="Room name" v-model="roomName">
-				<Button color="primary" size="medium" @click="joinRoomBtn"> JOIN ROOM </Button>	
-				<input type="text" placeholder="Room name" v-model="createRoomName">
-				<Button color="primary" size="medium" @click="createRoom"> CREATE ROOM </Button>	
+	<div class="centered-menu center-vertically-absolute">
+			<div class="mb-4" v-if="!joinRoomBtnPressed || !createRoomBtnPressed">
+				<i @click="goToMainMenu" class="fa-solid fa-arrow-left"></i>
+				<h3 class="pb-1">Join a room</h3>
+				<div class="form-group-row mt-4">
+					<label class="pr-3 pb-3">Player:</label> 
+					<input class="mr-2" type="text" placeholder="Enter your name" v-model="playerName">
+				</div>
+				<div class="form-group-row">
+					<label class="pr-3 pb-3">Room: </label>
+					<input class="mr-2" type="text" placeholder="Room name" v-model="roomName">
+				</div>
+				<Button class="mr-2" type="btn" @click="joinRoomBtn"> JOIN ROOM </Button>	
 
-				<p>{{errorMessage}}</p>
+				<div class="pb-7"></div>
+				
+				<h3 class="pb-1">Create a room</h3>
+				<div class="form-group-row">
+					<label class="pr-3 pb-3">Name:</label>
+					<input class="mr-2" type="text" placeholder="Room name" v-model="createRoomName">
+				</div>
+				<Button class="mr-2" type="btn" @click="createRoom"> CREATE ROOM </Button>	
+
+				<div>
+					<h4>{{errorMessage}}</h4>
+				</div>
+				
 			</div>
 			<div v-if="joinRoomBtnPressed || createRoomBtnPressed">	
-				<p>Player name: {{playerName}}</p>
-				<p>Room name: {{roomName}}</p>
-				<ul>
-					Connected players:
-					<li v-for="player in connectedPlayersNames" :key="player">
-						{{player}}
-					</li>
-				</ul>
-				<Button color="primary" size="medium" @click="startGame" :class="{disabled: disablePlay}"> PLAY </Button>
-				<Button color="red" size="medium"  @click="leaveRoom"> LEAVE ROOM </Button>
+
+				<div class="">
+					<i class="fa-solid fa-user pl-1 mb-2 form-group-row defaultCursor"> <span> <p class="pl-3">{{playerName}}</p> </span> </i>
+					<i class="fa-solid fa-house form-group-row defaultCursor"> <span> <h4 class="pl-3">{{roomName}}</h4> </span> </i>
+				</div>
+				<div class="align-right">
+					<ul class="pl-0">
+						<i class="fa-solid fa-people-roof big defaultCursor"> </i>
+						<li class="pr-2" v-for="player in connectedPlayersNames" :key="player">
+							<h5 class="pr-1">{{player}}</h5>
+						</li>
+					</ul>
+					
+				</div>
+				
+			
+				<Button type="btn mb-2" @click="startGame" :class="{disabled: disablePlay}"> PLAY </Button>
+				<Button type="secondary-btn" @click="leaveRoom"> LEAVE ROOM </Button>
 				<br>
 				<input type="text" v-model="message" placeholder="Type something...">
 				<button @click="sendMessage"> send message</button>
@@ -58,7 +83,6 @@
 					</ul>
 				</div>
 			</div>
-		</div>
 	</div>
 </template>
 
@@ -247,6 +271,10 @@ export default {
 			}
 			this.modifyChallange = false;
 			this.pickedDifficulty = "easy";
+		},
+
+		goToMainMenu() {
+			this.$router.push('/');
 		}
 
 		// getID() {

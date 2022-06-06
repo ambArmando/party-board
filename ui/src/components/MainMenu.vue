@@ -1,32 +1,35 @@
 <template>
-    <div>
-        <h3 class="text">PARTY BOARD</h3>
-        <div class="mainMenu">
-            <table>
+    <div class="centered-menu center-vertically-absolute">
+        <h3 class="text mt-4 pb-4">PARTY BOARD</h3>
+            <!--<table>
                 <tr v-for="(player, index) in players" :key="player" >
                     <td> <p>PLAYER {{index + 1}} -</p> </td>
                     <td> <input type="text" placeholder=" Enter your name" v-model="player.name"></td>
-                    <td v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class="crossSign"> X </td>
+                    <td v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class=""> X </td>
                 </tr>
-            </table>
+            </table>-->
 
-            <Button color="primary" size="medium" @click="addNewPlayer" :disabled="isDisabled"> ADD PLAYER </Button>
-            <Button v-if="players.length < 3 ? false : true" @click="removePLayer" color="red" size="medium">REMOVE PLAYER</Button>
-            <Button color="primary" size="medium" @click="multiplayerBtnHandler"> MULTIPLAYER </Button>
-            <Button color="primary" class="btnPlay" @click="playButtonHandler">PLAY!</Button> 
+            <div class="form-group-row mb-3" v-for="(player, index) in players" :key="player" >
+                    <label class="pr-3">PLAYER {{index + 1}}:</label> 
+                    <input class="mr-2" type="text" placeholder=" Enter your name" v-model="player.name">
+                    <i  v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class="fa-solid fa-xmark color-red big"></i>
+            </div>
 
-            <div class="spacer"></div>
-            
-            <div class="howToPlayPositionRelative">
-                <Button color="transparent" @click="toggleHowToPlay" class="howToPlay">How to play</Button>
-                <div v-show="showHowToPlay" class="howToPlayText">
-                    <p>{{howToPlayText}}</p> 
-                    <p>Green - easy challange</p>
-                    <p>Orange - medium challange</p>
-                    <p>Red - hard challange</p>
-                </div>
-            </div>  
-        </div>
+            <div class="pb-4"></div>
+
+            <Button class="mb-1 pr-2" @click="addNewPlayer" :disabled="isDisabled" type="btn"> ADD PLAYER </Button>
+            <Button class="mb-1 pr-2" v-if="players.length < 3 ? false : true" @click="removePLayer" type="btn">REMOVE PLAYER</Button>
+            <Button  class="mb-5 pr-2" type="btn" @click="multiplayerBtnHandler"> MULTIPLAYER </Button>
+            <Button  class="mb-1 pr-2" type="secondary-btn" @click="playButtonHandler">PLAY!</Button> 
+
+            <Button class="pr-2" type="btn" @click="toggleHowToPlay">HOW TO PLAY</Button>
+            <div v-show="showHowToPlay" class="">   
+                <p>{{howToPlayText}}</p> 
+                <p>Green - easy challange</p>
+                <p>Orange - medium challange</p>
+                <p>Red - hard challange</p>
+            </div>
+            <div class="pb-3"></div>
     </div>
 </template>
 

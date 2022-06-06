@@ -1,0 +1,550 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@300;400;700&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css");
+.center-vertically-absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
+.align-right {
+  float: right;
+}
+
+.color-red {
+  color: #e61d47 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+p, a, input, label {
+  font-family: "Roboto", sans-serif;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+  background-color: #0179fc;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: #016fe8;
+}
+
+.secondary-btn {
+  display: block;
+  width: 100%;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+  background-color: #0179fc;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.secondary-btn:hover {
+  background-color: #016fe8;
+}
+
+i {
+  cursor: pointer;
+}
+i.big {
+  font-size: 22px;
+}
+i.defaultCursor {
+  cursor: default;
+}
+
+.color-red {
+  color: #e61d47 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+p, a, input, label {
+  font-family: "Roboto", sans-serif;
+}
+
+input {
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.form-group-row {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.form-group-row label {
+  flex: 0 0 auto;
+}
+.m0 {
+  margin: 0px;
+}
+
+.p0 {
+  margin: 0px;
+}
+
+.mt-0 {
+  margin-top: 0px;
+}
+
+.pt-0 {
+  padding-top: 0px;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.pb-0 {
+  padding-bottom: 0px;
+}
+
+.ml-0 {
+  margin-left: 0px;
+}
+
+.pl-0 {
+  padding-left: 0px;
+}
+
+.mr-0 {
+  margin-right: 0px;
+}
+
+.pr-0 {
+  padding-right: 0px;
+}
+
+.m1 {
+  margin: 3px;
+}
+
+.p1 {
+  margin: 3px;
+}
+
+.mt-1 {
+  margin-top: 3px;
+}
+
+.pt-1 {
+  padding-top: 3px;
+}
+
+.mb-1 {
+  margin-bottom: 3px;
+}
+
+.pb-1 {
+  padding-bottom: 3px;
+}
+
+.ml-1 {
+  margin-left: 3px;
+}
+
+.pl-1 {
+  padding-left: 3px;
+}
+
+.mr-1 {
+  margin-right: 3px;
+}
+
+.pr-1 {
+  padding-right: 3px;
+}
+
+.m2 {
+  margin: 6px;
+}
+
+.p2 {
+  margin: 6px;
+}
+
+.mt-2 {
+  margin-top: 6px;
+}
+
+.pt-2 {
+  padding-top: 6px;
+}
+
+.mb-2 {
+  margin-bottom: 6px;
+}
+
+.pb-2 {
+  padding-bottom: 6px;
+}
+
+.ml-2 {
+  margin-left: 6px;
+}
+
+.pl-2 {
+  padding-left: 6px;
+}
+
+.mr-2 {
+  margin-right: 6px;
+}
+
+.pr-2 {
+  padding-right: 6px;
+}
+
+.m3 {
+  margin: 10px;
+}
+
+.p3 {
+  margin: 10px;
+}
+
+.mt-3 {
+  margin-top: 10px;
+}
+
+.pt-3 {
+  padding-top: 10px;
+}
+
+.mb-3 {
+  margin-bottom: 10px;
+}
+
+.pb-3 {
+  padding-bottom: 10px;
+}
+
+.ml-3 {
+  margin-left: 10px;
+}
+
+.pl-3 {
+  padding-left: 10px;
+}
+
+.mr-3 {
+  margin-right: 10px;
+}
+
+.pr-3 {
+  padding-right: 10px;
+}
+
+.m4 {
+  margin: 25px;
+}
+
+.p4 {
+  margin: 25px;
+}
+
+.mt-4 {
+  margin-top: 25px;
+}
+
+.pt-4 {
+  padding-top: 25px;
+}
+
+.mb-4 {
+  margin-bottom: 25px;
+}
+
+.pb-4 {
+  padding-bottom: 25px;
+}
+
+.ml-4 {
+  margin-left: 25px;
+}
+
+.pl-4 {
+  padding-left: 25px;
+}
+
+.mr-4 {
+  margin-right: 25px;
+}
+
+.pr-4 {
+  padding-right: 25px;
+}
+
+.m5 {
+  margin: 45px;
+}
+
+.p5 {
+  margin: 45px;
+}
+
+.mt-5 {
+  margin-top: 45px;
+}
+
+.pt-5 {
+  padding-top: 45px;
+}
+
+.mb-5 {
+  margin-bottom: 45px;
+}
+
+.pb-5 {
+  padding-bottom: 45px;
+}
+
+.ml-5 {
+  margin-left: 45px;
+}
+
+.pl-5 {
+  padding-left: 45px;
+}
+
+.mr-5 {
+  margin-right: 45px;
+}
+
+.pr-5 {
+  padding-right: 45px;
+}
+
+.m6 {
+  margin: 50px;
+}
+
+.p6 {
+  margin: 50px;
+}
+
+.mt-6 {
+  margin-top: 50px;
+}
+
+.pt-6 {
+  padding-top: 50px;
+}
+
+.mb-6 {
+  margin-bottom: 50px;
+}
+
+.pb-6 {
+  padding-bottom: 50px;
+}
+
+.ml-6 {
+  margin-left: 50px;
+}
+
+.pl-6 {
+  padding-left: 50px;
+}
+
+.mr-6 {
+  margin-right: 50px;
+}
+
+.pr-6 {
+  padding-right: 50px;
+}
+
+.m7 {
+  margin: 75px;
+}
+
+.p7 {
+  margin: 75px;
+}
+
+.mt-7 {
+  margin-top: 75px;
+}
+
+.pt-7 {
+  padding-top: 75px;
+}
+
+.mb-7 {
+  margin-bottom: 75px;
+}
+
+.pb-7 {
+  padding-bottom: 75px;
+}
+
+.ml-7 {
+  margin-left: 75px;
+}
+
+.pl-7 {
+  padding-left: 75px;
+}
+
+.mr-7 {
+  margin-right: 75px;
+}
+
+.pr-7 {
+  padding-right: 75px;
+}
+
+.m8 {
+  margin: 100px;
+}
+
+.p8 {
+  margin: 100px;
+}
+
+.mt-8 {
+  margin-top: 100px;
+}
+
+.pt-8 {
+  padding-top: 100px;
+}
+
+.mb-8 {
+  margin-bottom: 100px;
+}
+
+.pb-8 {
+  padding-bottom: 100px;
+}
+
+.ml-8 {
+  margin-left: 100px;
+}
+
+.pl-8 {
+  padding-left: 100px;
+}
+
+.mr-8 {
+  margin-right: 100px;
+}
+
+.pr-8 {
+  padding-right: 100px;
+}
+
+.board-game {
+  display: flex;
+  height: 100vh;
+}
+.board-game .board-contents {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  flex-basis: 100%;
+}
+.board-game .board-contents .board-players {
+  flex-basis: 15%;
+}
+.board-game .board-contents .board-wrapper {
+  padding: 0;
+  flex-basis: 65%;
+  overflow: hidden;
+}
+.board-game .board-contents .board-wrapper .canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-basis: 100%;
+  width: 100%;
+}
+.board-game .board-contents .board-wrapper .canvas-wrapper canvas {
+  display: block;
+  margin: 0;
+}
+.board-game .board-contents .board-chat {
+  display: flex;
+  flex-basis: 20%;
+  flex-direction: column;
+}
+
+.color-red {
+  color: #e61d47 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+p, a, input, label {
+  font-family: "Roboto", sans-serif;
+}
+
+.centered-menu {
+  display: flex;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 20px;
+  flex-direction: column;
+  max-width: 500px;
+  min-width: 500px;
+  background-color: white;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.color-red {
+  color: #e61d47 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat", sans-serif;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+p, a, input, label {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: #ccd4d9;
+}
+
+/*# sourceMappingURL=style.css.map */

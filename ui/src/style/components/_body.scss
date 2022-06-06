@@ -1,0 +1,10 @@
+
+@import '../constants/colors';
+@import '../constants/fonts';
+
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: $color-background-light;
+    //background-image: url('https://img.freepik.com/free-vector/memphis-pattern_1045-810.jpg?t=st=1654379573~exp=1654380173~hmac=10aaf47f1a2a435aeeda6159d02bcf3c223cbda069726a1921cbe41df8917529');
+}

@@ -1,5 +1,8 @@
 <template>
-  <div class="container">
+  <div class="board-game">
+    <BoardVue/>
+  </div>
+  <!--<div class="container">
     <header></header>
     <aside>
       <table>
@@ -12,9 +15,9 @@
       </table>
     </aside>
     <main>
-      <BoardVue/>
+      
     </main>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -48,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-html,
+/*html,
 body {
   height: 100%;
   margin: 0;
@@ -162,5 +165,5 @@ span {
         color: #fffb14;
       }
     }
-  }
+  }*/
 </style>

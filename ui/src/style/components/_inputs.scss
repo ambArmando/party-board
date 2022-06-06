@@ -1,0 +1,11 @@
+@import '../constants/colors';
+@import '../constants/fonts';
+
+$input-radius: 5px;
+$input-padding: 5px;
+
+input {
+    border-radius: $input-radius;
+    padding: $input-padding;
+}
+

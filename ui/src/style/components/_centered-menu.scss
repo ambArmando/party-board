@@ -1,0 +1,21 @@
+@import '../constants/colors';
+@import '../constants/fonts';
+@import '../mixins/shadows';
+
+$centered-menu-max-width: 500px;
+$centered-menu-padding: 20px;
+$centered-menu-border-radius: 10px;
+$centered-menu-backgroud-color: white;
+
+
+.centered-menu {
+    display: flex;
+    margin: 0 auto;
+    padding: $centered-menu-padding;
+    border-radius: $centered-menu-padding;
+    flex-direction: column;
+    max-width: $centered-menu-max-width;
+    min-width: $centered-menu-max-width;
+    background-color: $centered-menu-backgroud-color;
+    @include shadow-default;
+}

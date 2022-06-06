@@ -1,0 +1,48 @@
+@import '../constants/colors';
+@import '../constants/fonts';
+
+$button-border-radius: 5px;
+
+.btn {
+    display: block;
+    width: 100%;
+    font-family: $font-primary;
+    color: white;
+    background-color: $color-primary;
+    border-radius: $button-border-radius;
+    border: 1px solid black;
+    padding: 10px 20px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: darken($color-primary, 4%);
+    }
+}
+
+.secondary-btn {
+    display: block;
+    width: 100%;
+    font-family: $font-primary;
+    color: white;
+    background-color: $color-primary;
+    border-radius: $button-border-radius;
+    border: 1px solid black;
+    padding: 10px 20px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: darken($color-primary, 4%);
+    }
+
+}
+
+i {
+    cursor: pointer;
+    &.big {
+        font-size: 22px;
+    }
+
+    &.defaultCursor{
+        cursor: default;
+    }
+}
