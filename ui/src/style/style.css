@@ -14,6 +14,38 @@
   float: right;
 }
 
+.align-left {
+  float: left;
+}
+
+.width {
+  width: 100%;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.of {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: auto;
+}
+
+.wrapper {
+  width: 500px;
+  overflow: hidden;
+}
+
+.first {
+  width: 300px;
+  float: left;
+}
+
+.second {
+  overflow: hidden;
+}
+
 .color-red {
   color: #e61d47 !important;
 }
@@ -66,6 +98,12 @@ i {
 }
 i.big {
   font-size: 22px;
+}
+i.medium {
+  font-size: 16px;
+}
+i.smoll {
+  font-size: 8px;
 }
 i.defaultCursor {
   cursor: default;
@@ -461,6 +499,86 @@ input {
   padding-right: 100px;
 }
 
+.m9 {
+  margin: 200px;
+}
+
+.p9 {
+  margin: 200px;
+}
+
+.mt-9 {
+  margin-top: 200px;
+}
+
+.pt-9 {
+  padding-top: 200px;
+}
+
+.mb-9 {
+  margin-bottom: 200px;
+}
+
+.pb-9 {
+  padding-bottom: 200px;
+}
+
+.ml-9 {
+  margin-left: 200px;
+}
+
+.pl-9 {
+  padding-left: 200px;
+}
+
+.mr-9 {
+  margin-right: 200px;
+}
+
+.pr-9 {
+  padding-right: 200px;
+}
+
+.m10 {
+  margin: 300px;
+}
+
+.p10 {
+  margin: 300px;
+}
+
+.mt-10 {
+  margin-top: 300px;
+}
+
+.pt-10 {
+  padding-top: 300px;
+}
+
+.mb-10 {
+  margin-bottom: 300px;
+}
+
+.pb-10 {
+  padding-bottom: 300px;
+}
+
+.ml-10 {
+  margin-left: 300px;
+}
+
+.pl-10 {
+  padding-left: 300px;
+}
+
+.mr-10 {
+  margin-right: 300px;
+}
+
+.pr-10 {
+  padding-right: 300px;
+}
+
 .board-game {
   display: flex;
   height: 100vh;
@@ -545,6 +663,10 @@ body {
   margin: 0;
   height: 100vh;
   background-color: #ccd4d9;
+}
+
+.ul {
+  line-height: 2px;
 }
 
 /*# sourceMappingURL=style.css.map */

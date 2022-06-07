@@ -131,8 +131,12 @@ export class GameSession implements IGameSession {
     //     this.io.to(this.roomName).emit('new-message', body);
     // }
 
-    private sendMessage(message: string) {
-        this.io.to(this.roomName).emit('new-message', message);
+    private sendMessage(message: string, username?: string) {
+        const payload = {
+            message: message,
+            username: username,
+        }
+        this.io.to(this.roomName).emit('new-message', payload);
     }
 
     private sendErrorMessage(socket: string, errorMessage: string) {
@@ -171,6 +175,7 @@ export class GameSession implements IGameSession {
             console.log("in else diceCounter: ", this.diceCounter);
             console.log("[else]i si j pt challange dificulty: ", currentPlayer.i, currentPlayer.j);
             if (currentPlayer.i % 2 == 0 && currentPlayer.i > 0) {
+                console.log("trebe hard");
                 this.currentChallange = this.challangeManager.getUnusedChallange(ChallangeDifficulty.Hard);
             } else if (currentPlayer.j % 3 == 0) {
                 this.currentChallange = this.challangeManager.getUnusedChallange(ChallangeDifficulty.Medium);
@@ -340,7 +345,7 @@ export class GameSession implements IGameSession {
 
     message(message: string, socket: Socket) {
         this.messageBody = `${socket.data.username} said: ${message}`;
-        this.sendMessage(this.messageBody);
+        this.sendMessage(this.messageBody, socket.data.username);
     }
 
 }

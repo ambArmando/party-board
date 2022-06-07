@@ -110,8 +110,12 @@ class GameSession {
     //     }
     //     this.io.to(this.roomName).emit('new-message', body);
     // }
-    sendMessage(message) {
-        this.io.to(this.roomName).emit('new-message', message);
+    sendMessage(message, username) {
+        const payload = {
+            message: message,
+            username: username,
+        };
+        this.io.to(this.roomName).emit('new-message', payload);
     }
     sendErrorMessage(socket, errorMessage) {
         this.io.to(socket).emit('error-message', errorMessage);
@@ -293,7 +297,7 @@ class GameSession {
     }
     message(message, socket) {
         this.messageBody = `${socket.data.username} said: ${message}`;
-        this.sendMessage(this.messageBody);
+        this.sendMessage(this.messageBody, socket.data.username);
     }
 }
 exports.GameSession = GameSession;

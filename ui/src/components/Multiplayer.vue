@@ -2,25 +2,25 @@
 	<div class="centered-menu center-vertically-absolute">
 			<div class="mb-4" v-if="!joinRoomBtnPressed || !createRoomBtnPressed">
 				<i @click="goToMainMenu" class="fa-solid fa-arrow-left"></i>
-				<h3 class="pb-1">Join a room</h3>
+				<h3 class="pb-1">Alătură-te unei camere</h3>
 				<div class="form-group-row mt-4">
-					<label class="pr-3 pb-3">Player:</label> 
-					<input class="mr-2" type="text" placeholder="Enter your name" v-model="playerName">
+					<label class="pr-3 pb-3">Jucător:</label> 
+					<input class="mr-2" type="text" placeholder="Enter your name" v-model="playerName" maxlength="10" >
 				</div>
 				<div class="form-group-row">
-					<label class="pr-3 pb-3">Room: </label>
-					<input class="mr-2" type="text" placeholder="Room name" v-model="roomName">
+					<label class="pr-3 pb-3">Cameră: </label>
+					<input class="mr-2" type="text" placeholder="Numele camerei..." v-model="roomName" maxlength="10">
 				</div>
-				<Button class="mr-2" type="btn" @click="joinRoomBtn"> JOIN ROOM </Button>	
+				<Button class="mr-2" type="btn" @click="joinRoomBtn"> JOACĂ </Button>	
 
 				<div class="pb-7"></div>
 				
-				<h3 class="pb-1">Create a room</h3>
+				<h3 class="pb-1">Cameră nouă</h3>
 				<div class="form-group-row">
-					<label class="pr-3 pb-3">Name:</label>
-					<input class="mr-2" type="text" placeholder="Room name" v-model="createRoomName">
+					<label class="pr-3 pb-3">Nume:</label>
+					<input class="mr-2" type="text" placeholder="Numele camerei..." v-model="createRoomName" maxlength="10">
 				</div>
-				<Button class="mr-2" type="btn" @click="createRoom"> CREATE ROOM </Button>	
+				<Button class="mr-2" type="btn" @click="createRoom"> CAMERĂ NOUĂ </Button>	
 
 				<div>
 					<h4>{{errorMessage}}</h4>
@@ -28,60 +28,83 @@
 				
 			</div>
 			<div v-if="joinRoomBtnPressed || createRoomBtnPressed">	
-
-				<div class="">
-					<i class="fa-solid fa-user pl-1 mb-2 form-group-row defaultCursor"> <span> <p class="pl-3">{{playerName}}</p> </span> </i>
-					<i class="fa-solid fa-house form-group-row defaultCursor"> <span> <h4 class="pl-3">{{roomName}}</h4> </span> </i>
-				</div>
-				<div class="align-right">
-					<ul class="pl-0">
-						<i class="fa-solid fa-people-roof big defaultCursor"> </i>
-						<li class="pr-2" v-for="player in connectedPlayersNames" :key="player">
-							<h5 class="pr-1">{{player}}</h5>
-						</li>
-					</ul>
-					
+				<div class="wrapper">
+					<div class="first pt-2">
+						<i class="fa-solid fa-user pl-1 mb-2 form-group-row defaultCursor"> <span> <p class="pl-3"> Jucător: {{playerName}}</p> </span> </i>
+						<i class="fa-solid fa-house form-group-row defaultCursor"> <span> <p class="pl-3"> Cameră: {{roomName}}</p> </span> </i>
+					</div>
+					<div class="second align-right">
+						<ul class="ul">
+							<i class="fa-solid fa-people-roof big defaultCursor pl-4"> </i>
+							<li class="pr-2" v-for="player in connectedPlayersNames" :key="player">
+								<h5 class="pr-1">{{player}}</h5>
+							</li>
+						</ul>
+					</div>
 				</div>
 				
+				<div class="pb-4"></div>
+
+				<h3>Chat</h3>
+				<div class="form-group-row">
+					<input @keyup.enter="sendMessage" type="text" v-model="message" placeholder="Scrie ceva..." maxlength="50" >
+					<Button type="btn mb-3 ml-2 pl-3 pr-3 pt-2" @click="sendMessage"> <i class="fa-solid fa-paper-plane"></i> </Button>
+				</div>
+				<div class="chat-box" ref="chatBoxRef">
+					<ul>
+						<li v-for="message in messages" :key="message">
+							<div v-if="playerName === message.substring(0, message.indexOf(' '))" class="align-right width">
+								{{message}}
+							</div>
+							<div v-else>
+								{{message}} 
+							</div>	
+						</li>
+					</ul>
+				</div>
+
+				<div class="pb-3"></div>
 			
-				<Button type="btn mb-2" @click="startGame" :class="{disabled: disablePlay}"> PLAY </Button>
-				<Button type="secondary-btn" @click="leaveRoom"> LEAVE ROOM </Button>
-				<br>
-				<input type="text" v-model="message" placeholder="Type something...">
-				<button @click="sendMessage"> send message</button>
-				<br>
-				<div>	
-					{{pickedDifficulty}}
-					<input type="text" v-model="challange" placeholder="Baga provocare...">
-					<table>
-						<tr v-for="(challange, index) in playerChallanges" :key="challange">
-							<td> {{challange.text}} {{challange.difficulty}} </td>
-							<td @click="editChallange(index, challange)"> edit </td>
-							<div v-if="challangeIndex === index">
-								<td v-if="modifyChallange"> <input type="text" v-model="modifyChallangeModel" placeholder="Schimba provocarea..."> <button @click="saveModifiedChallange(index)"> schimba </button> </td>
-								<td v-if="modifyChallange">
+				<div class="">	
+					<h3 class="pb-0">Adaugă provocări</h3>
+					<div class="form-group-row">
+						<input type="text" v-model="challange" @keyup.enter="addChallange" placeholder="Provocare..." maxlength="40">
+						<Button type="btn mb-3 ml-2 pl-3 pr-3 pt-2" @click="addChallange"> <i class="fa-solid fa-plus"></i> </Button>
+					</div>
+
+					<div class="pb-3"> </div>
+
+					<div v-for="(challange, index) in playerChallanges" :key="challange">
+						<div class="form-group-row mt-2">
+							<div class="pl-4 fullWidth"> {{challange.text}} </div>
+							<div class="mr-4">{{challange.difficulty}}</div>
+							<i class="fa-solid fa-pen pl-4" @click="editChallange(index, challange)"> </i> 
+							<i class="fa-solid fa-xmark color-red big pl-3 ml-2 mr-1" @click="removeChallange(index)"></i>
+						</div>
+						<div v-if="challangeIndex === index">
+							<div class="pl-3 ml-3" v-if="modifyChallange">
+								<input class="" type="text" v-model="modifyChallangeModel" placeholder="Schimba provocarea..." maxlength="40">
+								<div class="form-group-row">
 									<input type="radio" id="easy" value="easy" v-model="pickedDifficulty">
 									<label for="easy">Easy</label>
 									<input type="radio" id="medium" value="medium" v-model="pickedDifficulty">
 									<label for="medium">Medium</label>
 									<input type="radio" id="hard" value="hard" v-model="pickedDifficulty">
 									<label for="hard">Hard</label>
-								</td>
+								</div>									
+									<Button class="mb-4" type="btn" @click="saveModifiedChallange(index)"> SALVEAZĂ </Button>
 							</div>
-							<td @click="removeChallange(index)"> X </td>
-						</tr>
-					</table>
-					<button @click="addChallange"> add </button>
-					<button @click="uploadChallanges"> Incarca provocarile </button>
+						</div>
+					</div>
+					<div v-if="playerChallanges.length">
+						<Button type="btn mt-4" @click="uploadChallanges"> INCARCĂ PROVOCĂRILE </Button>
+					</div>
 				</div>
-				<!-- {{connectedPlayers}} -->
-				<div class="chat-box" ref="chatBoxRef">
-					<ul>
-						<li v-for="message in messages" :key="message">
-							{{message}}
-						</li>
-					</ul>
-				</div>
+
+				<div class="pb-7"></div>
+
+				<Button type="btn mb-2" @click="startGame" :class="{disabled: disablePlay}"> JOACĂ </Button>
+				<Button type="secondary-btn" @click="leaveRoom"> PĂRĂSEȘTE CAMERA </Button>
 			</div>
 	</div>
 </template>
@@ -119,11 +142,11 @@ export default {
 				modifyChallangeModel: '',
 				challangeIndex: 0,
 				pickedDifficulty: 'easy',
+				//playerNameFromMessage: ''
 			}
 		},
 
 	mounted() {
-
 		this.$store.dispatch('setSocket', this.socket);
 
 		this.socket.on("state-update", (payload) => {
@@ -178,12 +201,12 @@ export default {
 			}
 		},
 
-		chatBox(msg) {
-			console.log(msg);
-			// if (payload.optionalMessage !== undefined) {
-			// 	this.messages.push(payload.optionalMessage);
-			// }
-			this.messages.push(msg);
+		chatBox(payload) {
+			console.log(payload);
+			console.log(payload.message.substring(0, payload.message.indexOf(" ")));
+			//this.playerNameFromMessage = payload.message.substring(0, payload.message.indexOf(" "));
+
+			this.messages.push(payload.message);
 			this.$nextTick( () => {
 				let chatBoxRef = this.$refs.chatBoxRef;
 				if (chatBoxRef !== undefined) {
@@ -240,6 +263,7 @@ export default {
 
 		uploadChallanges() {
 			this.socket.emit("add-challanges", this.playerChallanges);
+			this.playerChallanges = [];
 		},
 
 		removeChallange(index) {

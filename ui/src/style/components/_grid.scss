@@ -1,4 +1,4 @@
-$space: (0, 3, 6, 10, 25, 45, 50, 75, 100);
+$space: (0, 3, 6, 10, 25, 45, 50, 75, 100, 200, 300);
 $pos: (top, bottom, left, right);
 
 @for $j from 1 through length($space) {

@@ -8,3 +8,37 @@
 .align-right {
     float: right;
 }
+
+.align-left {
+    float: left;
+}
+
+.width {
+    width: 100%;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.of {
+    overflow-y: auto;
+    overflow-x: hidden;
+	height: auto;
+}
+
+// de mutat astea 3
+.wrapper {
+    width: 500px;
+    overflow: hidden; 
+}
+
+.first {
+    width: 300px;
+    float:left; 
+    
+}
+
+.second {
+    overflow: hidden; 
+}
