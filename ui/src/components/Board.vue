@@ -5,7 +5,7 @@
         <tr v-for="player in players" :key="player">
           <td>
             <span>{{ player.name }} <span :class="player.color"><p>{{ player.color }}</p></span> <br /></span> 
-            Points: {{ player.points }}
+            Puncte: {{ player.points }}
           </td>
         </tr>
       </table>
@@ -17,29 +17,28 @@
 		</div>
 		<div class="board-chat">
 			<br>
-			
-			<p> {{players[currentPlayerIndex].name}}'s turn </p>
+			<p> Este ranul lui {{players[currentPlayerIndex].name}} </p>
 			<button :disabled="!isMyTurn" @click="moveCurrentPlayer" class="dice" :class="{disabled: disableDice}">dice</button>
 			<p v-if="currentDiceValue > 0">Rolled {{currentDiceValue}}</p>
 			<Dialog v-if="togglePopup">
 				<div class="popup">
 					<p class="popup-text"> {{currentChallangeText}} </p>
-					<Button @click="doneChallange" color="primary" size="medium" class="popup-btn-completed"> Challange Completed </Button>
-					<Button @click="onDeclineChallange" color="red" size="medium" class="popup-btn-declined"> Decline Challange </Button>
+					<Button @click="doneChallange" color="primary" size="medium" class="popup-btn-completed"> ACCEPTA PROVOCAREA </Button>
+					<Button @click="onDeclineChallange" color="red" size="medium" class="popup-btn-declined"> REFUZA PROVOCAREA </Button>
 				</div>
 			</Dialog>
 			<div class="chat-box" ref="chatBoxRef">
 				{{ canvasWidth }}
 				{{ canvasHeight }}
+				<div v-if="isMultiplayer">
+					<input @keyup.enter="sendMessage" type="text" v-model="message" placeholder="Type something...">
+					<button class="btn" @click="sendMessage"> trimite mesaj </button>
+				</div>
 				<ul>
 					<li v-for="message in messages" :key="message">
 						{{message}}
 					</li>
 				</ul>
-				<div v-if="isMultiplayer">
-					<input type="text" v-model="message" placeholder="Type something...">
-					<button class="btn" @click="sendMessage"> send message</button>
-				</div>
 			</div>
 		</div>
 </div>	
@@ -173,7 +172,7 @@ export default {
 			
 			/*this.canvasWidth = rect.width;
 			this.canvasHeight = rect.height;
-*/			console.log(rect.height);
+*/		//	console.log(rect.height);
 			const min = Math.floor(Math.min(rect.height, rect.width));
 			this.canvasWidth = min;
 			this.canvasHeight = min;//Math.min(this.canvasWidth, rect.height);
@@ -379,6 +378,7 @@ export default {
 					for (let player of this.players) {
 						if (player.points != 0) {
 							console.log(player.name + " won!");
+							console.log("disable la dice in mm");
 							this.disableDice = true;
 							if (this.isMultiplayer) { 
 								this.sockett.emit("game-over", player);
@@ -424,6 +424,11 @@ export default {
 </script>
 
 <style scoped>
+
+	.disabled{
+		pointer-events: none;
+	}
+	
 /*
 	.board-wrapper {
 		display: inline-block;

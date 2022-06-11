@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
             }
             else {
                 console.log("invalid name");
-                io.to(socket.id).emit('error-message', "Invalid room name!");
+                io.to(socket.id).emit('error-message', "Nu se poate creea o camera cu numele acesta!");
                 throw new InvalidNameException_1.InvalidNameException();
             }
         }

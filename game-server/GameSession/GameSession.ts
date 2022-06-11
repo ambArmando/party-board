@@ -8,7 +8,7 @@ import { Player } from "../Entities/Player";
 import { Logger } from "../Logger/Logger";
 import { IChallangeRepository } from "../Repositories/ChallangeRepository/Abstractions/IChallangeRepository";
 import { ChallangeCollection, ChallangeRepository } from "../Repositories/ChallangeRepository/ChallangeRepository";
-import { generateRandomHexColor } from "../Shared/Helpers";
+//import { generateRandomHexColor } from "../Shared/Helpers";
 import { IGameSession } from "./Abstractions/IGameSession";
 import { GameAlreadyStartedException } from "./Exceptions/GameAlreadyStartedException";
 import { InvalidNameException } from "./Exceptions/InvalidNameException";
@@ -59,7 +59,7 @@ export class GameSession implements IGameSession {
     private currentChallange: Challange;
     private diceCounter: number = 1;
 
-    // Dependencies 
+    // Compositions 
     private challangeManager: IChallangeManager = new ChallangeManager();
     private challangeRepository: IChallangeRepository = new ChallangeRepository();
 
@@ -152,7 +152,7 @@ export class GameSession implements IGameSession {
         this.informPlayers(GameServerEvents.startGame);
     }
 
-    private handleRollDice(currentPlayer: any, diceValue: number, currentPlayerIndex: number) {
+    private handleRollDice(currentPlayer: any, diceValue: number) {
        // console.log("info player turn:" + currentPlayer.toString() + " " + currentPlayerIndex + " dice: " + diceValue);
         //console.log(currentPlayer);
         for (let player of this.players) {
@@ -178,8 +178,12 @@ export class GameSession implements IGameSession {
                 console.log("trebe hard");
                 this.currentChallange = this.challangeManager.getUnusedChallange(ChallangeDifficulty.Hard);
             } else if (currentPlayer.j % 3 == 0) {
+                console.log("trebe medm");
+
                 this.currentChallange = this.challangeManager.getUnusedChallange(ChallangeDifficulty.Medium);
             } else {
+                console.log("trebe ez");
+
                 this.currentChallange = this.challangeManager.getUnusedChallange(ChallangeDifficulty.Easy);
             }
             this.diceCounter = 1;
@@ -226,9 +230,10 @@ export class GameSession implements IGameSession {
         this.informPlayers();
     }
 
-    private handleAddChallanges(challangesList: Array<ChallangeDto>) {
+    private handleAddChallanges(challangesList: Array<ChallangeDto>, playerName: string) {
         // TODO: verificari
         this.challangeManager.addChallanges(challangesList);
+        this.sendMessage(`${playerName} a adăugat un set de provocări!`);
     }
 
     private initSocketHandlers(socket: Socket): void {
@@ -236,8 +241,8 @@ export class GameSession implements IGameSession {
             this.handleStartGame();
         });
 
-        socket.on(GameClientEvents.rollDice, (currentPlayer: Player, diceValue: number, currentPlayerIndex: number) => {
-            this.handleRollDice(currentPlayer, diceValue, currentPlayerIndex);
+        socket.on(GameClientEvents.rollDice, (currentPlayer: Player, diceValue: number) => {
+            this.handleRollDice(currentPlayer, diceValue);
         });
 
         socket.on(GameClientEvents.acceptChallange, () => {
@@ -258,8 +263,9 @@ export class GameSession implements IGameSession {
             this.handleGameOver(winner);
         });
 
-        socket.on(GameClientEvents.addChallanges, (challangesList: Array<ChallangeDto>) => {
-            this.handleAddChallanges(challangesList);
+        socket.on(GameClientEvents.addChallanges, (challangesList: Array<ChallangeDto>, playerName: string) => {
+            console.log("challange array de la player: ", challangesList, playerName);
+            this.handleAddChallanges(challangesList, playerName);
         });
     }
 
@@ -267,51 +273,34 @@ export class GameSession implements IGameSession {
     addPlayer(playerName: string, socket: Socket) {
 
         if (this.currentState !== GameStates.waitingForPlayersToJoin) {
-            this.errorMessage = "The game has already started!";
+            this.errorMessage = "Jocul in care incerci să intri a inceput deja!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new GameAlreadyStartedException();
         }
 
         if (this.players.length + 1 > this.roomSize) {
-            this.errorMessage = "The room you're trying to join is full!";
+            this.errorMessage = "Camera in care vrei să intri este plină!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new RoomIsFullException();
         }
 
         if (playerName.trim() === "") {
-            this.errorMessage = "Please pick a name!";
+            this.errorMessage = "Alege un nume!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new InvalidNameException();
-           // playerName = "Anonymous" + " " + Math.floor(Math.random() * 100);
         }
 
-        // let playersNamesRecord: Record<string, number> = {};
-        // for (const player of this.players) {
-        //     console.log(playersNamesRecord[player.name] === 0);
-        //     if (playersNamesRecord[player.name] === undefined) {
-        //         playersNamesRecord[player.name] = 1;
-        //     } else {
-        //         playersNamesRecord[player.name] = playersNamesRecord[player.name] + 1;
-        //     }
-        // }
-
-        // console.log('asa arata recordu in mortii matii', playersNamesRecord);
-
-        // if (playersNamesRecord[playerName] > 1) {
-        //     playerName += playersNamesRecord[playerName] + 1;
-        // }
         let playersNames = [];
         for (const player of this.players) {
             playersNames.push(player.name);
         }
 
         if (playersNames.indexOf(playerName) > -1) {
-            this.errorMessage = "Player with this name already in the session!";
+            this.errorMessage = "Există un jucator conectat cu acest nume!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new InvalidNameException();
         }
         
-        console.log("player name", playerName);
         const player = new Player({
             id: this.getID(),
             name: playerName,
@@ -325,9 +314,8 @@ export class GameSession implements IGameSession {
 
         this.initSocketHandlers(socket);
         socket.join(this.roomName);
-        this.sendMessage(`${playerName} joined the room!`);
+        this.sendMessage(`${playerName} a intrat in camera!`);
         this.informPlayers(GameServerEvents.playerJoined);
-        //socket.emit(GameServerSingleClientEvents.sendPlayerData, player.toJson);
         this.io.to(socket.id).emit(GameServerSingleClientEvents.sendPlayerData, player.toJson());
         console.log('Player joined' + playerName);
     }
@@ -339,12 +327,12 @@ export class GameSession implements IGameSession {
                 socket.leave(this.roomName);
             }
         }
-        this.sendMessage(`${playerName} left the room!`);
+        this.sendMessage(`${playerName} a parasit camera!`);
         this.informPlayers(GameServerEvents.playerLeft);
     }
 
     message(message: string, socket: Socket) {
-        this.messageBody = `${socket.data.username} said: ${message}`;
+        this.messageBody = `${socket.data.username}: ${message}`;
         this.sendMessage(this.messageBody, socket.data.username);
     }
 

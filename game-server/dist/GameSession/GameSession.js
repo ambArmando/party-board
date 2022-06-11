@@ -50,7 +50,7 @@ class GameSession {
         this.colors = ['fuchsia', 'purple', 'lightBlue', 'lightgreen', 'tan', 'yellow', 'teal', 'indigo'];
         this.errorMessage = "";
         this.diceCounter = 1;
-        // Dependencies 
+        // Compositions 
         this.challangeManager = new ChallangeManager_1.ChallangeManager();
         this.challangeRepository = new ChallangeRepository_1.ChallangeRepository();
         this.currentState = GameStates.waitingForPlayersToJoin;
@@ -127,7 +127,7 @@ class GameSession {
         this.challangeManager.addChallanges(this.challangeRepository.getChallangeCollection(ChallangeRepository_1.ChallangeCollection.standard));
         this.informPlayers(GameServerEvents.startGame);
     }
-    handleRollDice(currentPlayer, diceValue, currentPlayerIndex) {
+    handleRollDice(currentPlayer, diceValue) {
         // console.log("info player turn:" + currentPlayer.toString() + " " + currentPlayerIndex + " dice: " + diceValue);
         //console.log(currentPlayer);
         for (let player of this.players) {
@@ -151,12 +151,15 @@ class GameSession {
             console.log("in else diceCounter: ", this.diceCounter);
             console.log("[else]i si j pt challange dificulty: ", currentPlayer.i, currentPlayer.j);
             if (currentPlayer.i % 2 == 0 && currentPlayer.i > 0) {
+                console.log("trebe hard");
                 this.currentChallange = this.challangeManager.getUnusedChallange(Challange_1.ChallangeDifficulty.Hard);
             }
             else if (currentPlayer.j % 3 == 0) {
+                console.log("trebe medm");
                 this.currentChallange = this.challangeManager.getUnusedChallange(Challange_1.ChallangeDifficulty.Medium);
             }
             else {
+                console.log("trebe ez");
                 this.currentChallange = this.challangeManager.getUnusedChallange(Challange_1.ChallangeDifficulty.Easy);
             }
             this.diceCounter = 1;
@@ -197,16 +200,17 @@ class GameSession {
         this.currentState = GameStates.gameOver;
         this.informPlayers();
     }
-    handleAddChallanges(challangesList) {
+    handleAddChallanges(challangesList, playerName) {
         // TODO: verificari
         this.challangeManager.addChallanges(challangesList);
+        this.sendMessage(`${playerName} a adăugat un set de provocări!`);
     }
     initSocketHandlers(socket) {
         socket.on(GameClientEvents.startGame, () => {
             this.handleStartGame();
         });
-        socket.on(GameClientEvents.rollDice, (currentPlayer, diceValue, currentPlayerIndex) => {
-            this.handleRollDice(currentPlayer, diceValue, currentPlayerIndex);
+        socket.on(GameClientEvents.rollDice, (currentPlayer, diceValue) => {
+            this.handleRollDice(currentPlayer, diceValue);
         });
         socket.on(GameClientEvents.acceptChallange, () => {
             this.currentState = GameStates.waitingForChallangeStatus;
@@ -222,51 +226,37 @@ class GameSession {
         socket.on(GameClientEvents.gameOver, (winner) => {
             this.handleGameOver(winner);
         });
-        socket.on(GameClientEvents.addChallanges, (challangesList) => {
-            this.handleAddChallanges(challangesList);
+        socket.on(GameClientEvents.addChallanges, (challangesList, playerName) => {
+            console.log("challange array de la player: ", challangesList, playerName);
+            this.handleAddChallanges(challangesList, playerName);
         });
     }
     /** Public api */
     addPlayer(playerName, socket) {
         if (this.currentState !== GameStates.waitingForPlayersToJoin) {
-            this.errorMessage = "The game has already started!";
+            this.errorMessage = "Jocul in care incerci să intri a inceput deja!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new GameAlreadyStartedException_1.GameAlreadyStartedException();
         }
         if (this.players.length + 1 > this.roomSize) {
-            this.errorMessage = "The room you're trying to join is full!";
+            this.errorMessage = "Camera in care vrei să intri este plină!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new RoomIsFullException_1.RoomIsFullException();
         }
         if (playerName.trim() === "") {
-            this.errorMessage = "Please pick a name!";
+            this.errorMessage = "Alege un nume!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new InvalidNameException_1.InvalidNameException();
-            // playerName = "Anonymous" + " " + Math.floor(Math.random() * 100);
         }
-        // let playersNamesRecord: Record<string, number> = {};
-        // for (const player of this.players) {
-        //     console.log(playersNamesRecord[player.name] === 0);
-        //     if (playersNamesRecord[player.name] === undefined) {
-        //         playersNamesRecord[player.name] = 1;
-        //     } else {
-        //         playersNamesRecord[player.name] = playersNamesRecord[player.name] + 1;
-        //     }
-        // }
-        // console.log('asa arata recordu in mortii matii', playersNamesRecord);
-        // if (playersNamesRecord[playerName] > 1) {
-        //     playerName += playersNamesRecord[playerName] + 1;
-        // }
         let playersNames = [];
         for (const player of this.players) {
             playersNames.push(player.name);
         }
         if (playersNames.indexOf(playerName) > -1) {
-            this.errorMessage = "Player with this name already in the session!";
+            this.errorMessage = "Există un jucator conectat cu acest nume!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new InvalidNameException_1.InvalidNameException();
         }
-        console.log("player name", playerName);
         const player = new Player_1.Player({
             id: this.getID(),
             name: playerName,
@@ -279,9 +269,8 @@ class GameSession {
         this.players.push(player);
         this.initSocketHandlers(socket);
         socket.join(this.roomName);
-        this.sendMessage(`${playerName} joined the room!`);
+        this.sendMessage(`${playerName} a intrat in camera!`);
         this.informPlayers(GameServerEvents.playerJoined);
-        //socket.emit(GameServerSingleClientEvents.sendPlayerData, player.toJson);
         this.io.to(socket.id).emit(GameServerSingleClientEvents.sendPlayerData, player.toJson());
         console.log('Player joined' + playerName);
     }
@@ -292,11 +281,11 @@ class GameSession {
                 socket.leave(this.roomName);
             }
         }
-        this.sendMessage(`${playerName} left the room!`);
+        this.sendMessage(`${playerName} a parasit camera!`);
         this.informPlayers(GameServerEvents.playerLeft);
     }
     message(message, socket) {
-        this.messageBody = `${socket.data.username} said: ${message}`;
+        this.messageBody = `${socket.data.username}: ${message}`;
         this.sendMessage(this.messageBody, socket.data.username);
     }
 }

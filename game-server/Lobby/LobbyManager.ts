@@ -27,7 +27,7 @@ export class LobbyManager implements ILobbyManager {
         if (!this.roomExists(roomName)) {
             this._gameSessions[roomName] = new GameSession(roomName, this.io);
         } else {
-            this.io.to(socket.id).emit('error-message', `Room with this name (${roomName}) already exists!`);
+            this.io.to(socket.id).emit('error-message', `Camera '${roomName}' există deja!`);
             throw new RoomExistsException(roomName);
         }
         
@@ -37,7 +37,7 @@ export class LobbyManager implements ILobbyManager {
 
     join(roomName: string, playerName: string, socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>): void {
         if (!this.roomExists(roomName)) {
-            this.io.to(socket.id).emit('error-message', `Room ${roomName} doesn't exist!`);
+            this.io.to(socket.id).emit('error-message', `Camera '${roomName}' nu există!`);
             throw new RoomDoesNotExistException(roomName);
         } else {
             this._gameSessions[roomName].addPlayer(playerName, socket);

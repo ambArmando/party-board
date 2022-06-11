@@ -5,7 +5,7 @@
 				<h3 class="pb-1">Alătură-te unei camere</h3>
 				<div class="form-group-row mt-4">
 					<label class="pr-3 pb-3">Jucător:</label> 
-					<input class="mr-2" type="text" placeholder="Enter your name" v-model="playerName" maxlength="10" >
+					<input class="mr-2" type="text" placeholder="Introdu un nume..." v-model="playerName" maxlength="10" >
 				</div>
 				<div class="form-group-row">
 					<label class="pr-3 pb-3">Cameră: </label>
@@ -53,12 +53,13 @@
 				<div class="chat-box" ref="chatBoxRef">
 					<ul>
 						<li v-for="message in messages" :key="message">
-							<div v-if="playerName === message.substring(0, message.indexOf(' '))" class="align-right width">
+							<!-- <div v-if="playerName === message.substring(0, message.indexOf(' '))" class="align-right width">
 								{{message}}
 							</div>
 							<div v-else>
-								{{message}} 
-							</div>	
+							    {{message}}
+							</div>	 -->
+							{{message}}
 						</li>
 					</ul>
 				</div>
@@ -85,11 +86,11 @@
 							<div class="pl-3 ml-3" v-if="modifyChallange">
 								<input class="" type="text" v-model="modifyChallangeModel" placeholder="Schimba provocarea..." maxlength="40">
 								<div class="form-group-row">
-									<input type="radio" id="easy" value="easy" v-model="pickedDifficulty">
+									<input type="radio" id="easy" value="Easy" v-model="pickedDifficulty">
 									<label for="easy">Easy</label>
-									<input type="radio" id="medium" value="medium" v-model="pickedDifficulty">
+									<input type="radio" id="medium" value="Medium" v-model="pickedDifficulty">
 									<label for="medium">Medium</label>
-									<input type="radio" id="hard" value="hard" v-model="pickedDifficulty">
+									<input type="radio" id="hard" value="Hard" v-model="pickedDifficulty">
 									<label for="hard">Hard</label>
 								</div>									
 									<Button class="mb-4" type="btn" @click="saveModifiedChallange(index)"> SALVEAZĂ </Button>
@@ -105,6 +106,10 @@
 
 				<Button type="btn mb-2" @click="startGame" :class="{disabled: disablePlay}"> JOACĂ </Button>
 				<Button type="secondary-btn" @click="leaveRoom"> PĂRĂSEȘTE CAMERA </Button>
+
+				<div>
+					<h4>{{errorMessage}}</h4>
+				</div>
 			</div>
 	</div>
 </template>
@@ -141,7 +146,7 @@ export default {
 				modifyChallange: false,
 				modifyChallangeModel: '',
 				challangeIndex: 0,
-				pickedDifficulty: 'easy',
+				pickedDifficulty: 'Easy',
 				//playerNameFromMessage: ''
 			}
 		},
@@ -172,6 +177,7 @@ export default {
 		})
 
 		this.socket.on("error-message", (errorMessage) => {
+			console.log(errorMessage);
 			this.errorMessage = errorMessage;
 			setTimeout(()=> {
 				this.errorMessage = "";
@@ -180,7 +186,7 @@ export default {
 
 		this.socket.on("s-player-data", (playerData) => {
 			this.$store.dispatch('setThisPlayer', playerData);
-				console.log("Store player data", playerData);
+			console.log("Store player data", playerData);
 		});
 
 	},
@@ -203,7 +209,7 @@ export default {
 
 		chatBox(payload) {
 			console.log(payload);
-			console.log(payload.message.substring(0, payload.message.indexOf(" ")));
+			//console.log(payload.message.substring(0, payload.message.indexOf(" ")));
 			//this.playerNameFromMessage = payload.message.substring(0, payload.message.indexOf(" "));
 
 			this.messages.push(payload.message);
@@ -226,7 +232,7 @@ export default {
 			this.$store.dispatch('setIsMultiplayer', true);
 			this.$store.dispatch('setRoom', this.roomName);
 			if (this.playerName.trim() === "") {
-				this.errorMessage = "Please pick a name!";
+				this.errorMessage = "Alege un nume!";
 				setTimeout(()=> {
 					this.errorMessage = "";
 				}, 3000);
@@ -243,8 +249,10 @@ export default {
 		},
 
 		sendMessage() {
-			this.socket.emit("send-message", this.roomName, this.message);
-			this.message = '';
+			if (this.message.trim() !== '') {
+				this.socket.emit("send-message", this.roomName, this.message);
+				this.message = '';
+			}
 		},
 
 		startGame() {
@@ -258,11 +266,28 @@ export default {
 					difficulty: this.pickedDifficulty,
 				});
 				this.challange = "";
+			} else {
+				this.errorMessage = "Introdu o provocare!";
+				setTimeout(()=> {
+					this.errorMessage = "";	
+				}, 3000);
+				
 			}
 		},
 
 		uploadChallanges() {
-			this.socket.emit("add-challanges", this.playerChallanges);
+			console.log(this.playerChallanges);
+			for (const challange of this.playerChallanges) {
+				console.log(challange);
+				if (challange.difficulty === "Easy") {
+					challange.difficulty = 0;
+				} else if (challange.difficulty === "Medium") {
+					challange.difficulty = 1;
+				} else {
+					challange.difficulty = 2;
+				}
+			}
+			this.socket.emit("add-challanges", this.playerChallanges, this.playerName);
 			this.playerChallanges = [];
 		},
 

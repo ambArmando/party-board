@@ -2,6 +2,6 @@ import { ServerException } from "../../Shared/Exceptions/ServerException";
 
 export class RoomIsFullException extends ServerException {
     constructor () {
-        super('The room is full');
+        super('Camera pe care vrei să o accesezi este plină!');
     }
 }

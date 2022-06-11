@@ -14,4 +14,5 @@ export class Challange {
         this.text = text;
         this.difficulty = difficulty;
     }
+
 }

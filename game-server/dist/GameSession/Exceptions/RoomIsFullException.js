@@ -4,7 +4,7 @@ exports.RoomIsFullException = void 0;
 const ServerException_1 = require("../../Shared/Exceptions/ServerException");
 class RoomIsFullException extends ServerException_1.ServerException {
     constructor() {
-        super('The room is full');
+        super('Camera pe care vrei să o accesezi este plină!');
     }
 }
 exports.RoomIsFullException = RoomIsFullException;

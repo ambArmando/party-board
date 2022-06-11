@@ -10,24 +10,21 @@
             </table>-->
 
             <div class="form-group-row mb-3" v-for="(player, index) in players" :key="player" >
-                <label class="pr-3">PLAYER {{index + 1}}:</label> 
-                <input class="mr-2" type="text" placeholder=" Enter your name" v-model="player.name">
+                <label class="pr-3">JUCĂTOR {{index + 1}}:</label> 
+                <input class="mr-2" type="text" placeholder=" Introdu un nume..." v-model="player.name">
                 <i  v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class="fa-solid fa-xmark color-red big"></i>
             </div>
 
             <div class="pb-4"></div>
 
-            <Button class="mb-1 pr-2" @click="addNewPlayer" :disabled="isDisabled" type="btn"> ADD PLAYER </Button>
-            <Button class="mb-1 pr-2" v-if="players.length < 3 ? false : true" @click="removePLayer" type="btn">REMOVE PLAYER</Button>
+            <Button class="mb-1 pr-2" @click="addNewPlayer" :disabled="isDisabled" type="btn"> ADAUGĂ JUCĂTOR </Button>
+            <Button class="mb-1 pr-2" v-if="players.length < 3 ? false : true" @click="removePLayer" type="btn">ȘTERGE JUCĂTOR</Button>
             <Button  class="mb-5 pr-2" type="btn" @click="multiplayerBtnHandler"> MULTIPLAYER </Button>
-            <Button  class="mb-1 pr-2" type="secondary-btn" @click="playButtonHandler">PLAY!</Button> 
+            <Button  class="mb-1 pr-2" type="secondary-btn" @click="playButtonHandler">JOACĂ</Button> 
 
-            <Button class="pr-2" type="btn" @click="toggleHowToPlay">HOW TO PLAY</Button>
+            <Button class="pr-2" type="btn" @click="toggleHowToPlay">CUM SE JOACĂ</Button>
             <div v-show="showHowToPlay" class="">   
                 <p>{{howToPlayText}}</p> 
-                <p>Green - easy challange</p>
-                <p>Orange - medium challange</p>
-                <p>Red - hard challange</p>
             </div>
             <div class="pb-3"></div>
     </div>
@@ -52,7 +49,8 @@ export default {
             isMultiplayer: false,
             randomNames: ['bottle', 'water', 'camera', 'stamp', 'postcard', 'pencil', 'file', 'candy', 'potato', 'onion', 'leaf', 'coin', 'mop', 'key'],
             randomColors: ['fuchsia', 'purple', 'lightBlue', 'lightgreen', 'tan', 'yellow', 'teal', 'indigo'],
-            howToPlayText: 'Spin the dice and move to a square, depending on the box color a challange will pop up. Players have the ability to decline the challange but doing this will make them lose points. If the points get to 0 the player will be eliminated. '
+            howToPlayText: 'Jucătorii dau pe rând cu zarul și se deplasează pe tabla de joc in funcție de noroc. Sub fiecare pătrat colorat există o provocare diferită in dificultate pe care jucătorii au posibilitatea să decidă daca o vor indeplini, in funcție de punctele rămase.'        
+        
         }
     },
 
@@ -84,7 +82,6 @@ export default {
 
         addNewPlayer() {
             if (this.players.length > 7) {
-                console.log("no more players");
                 this.isDisabled = true;
             } else {
                 this.players.push({

@@ -20,7 +20,7 @@ class LobbyManager {
             this._gameSessions[roomName] = new GameSession_1.GameSession(roomName, this.io);
         }
         else {
-            this.io.to(socket.id).emit('error-message', `Room with this name (${roomName}) already exists!`);
+            this.io.to(socket.id).emit('error-message', `Camera '${roomName}' există deja!`);
             throw new RoomExistsException_1.RoomExistsException(roomName);
         }
         this.logger.log(`Created room ${roomName}`);
@@ -28,7 +28,7 @@ class LobbyManager {
     }
     join(roomName, playerName, socket) {
         if (!this.roomExists(roomName)) {
-            this.io.to(socket.id).emit('error-message', `Room ${roomName} doesn't exist!`);
+            this.io.to(socket.id).emit('error-message', `Camera '${roomName}' nu există!`);
             throw new RoomDoesNotExistException_1.RoomDoesNotExistException(roomName);
         }
         else {

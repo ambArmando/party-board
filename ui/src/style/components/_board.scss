@@ -35,4 +35,8 @@
             flex-direction: column;
         }
     }
+
+    .disabled{
+		pointer-events: none;
+	}
 }
