@@ -1,15 +1,49 @@
 .board-game {
     display: flex;
     height: 100vh;
+    overflow: hidden;
 
     .board-contents {
         display: flex;
         flex-direction: row;
         height: 100vh;
         flex-basis: 100%;
+        background-image: linear-gradient(to right top, #ffffff, #fbfbfe, #f5f7fe, #eef4fd, #e6f1fc, #e6f1fc, #e6f1fc, #e6f1fc, #eef4fd, #f5f7fe, #fbfbfe, #ffffff);
         
         .board-players {
             flex-basis: 15%;
+
+
+            .yellow {
+                -webkit-text-stroke: 1px rgb(171, 171, 171);
+                color: yellow;
+            }
+            .indigo {
+                color: indigo;
+            }
+            .fuchsia{
+                color: fuchsia;
+            }
+            .tan {
+                color: tan;
+            }
+            .blue {
+                color: blue;
+            }
+            .lightBlue {
+                color: lightblue;
+            }
+            .lightGreen {
+                color: lightgreen;
+            }
+            .teal {
+                color: teal;
+            }
+
+            .border-bottom {
+                border-bottom: 1px solid grey;
+                width: 100%;
+            }
         }
 
         .board-wrapper {

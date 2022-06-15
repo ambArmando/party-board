@@ -18,6 +18,51 @@ class ChallangeRepository {
                 }, {
                     text: "Oferă un masaj la picioare persoanei din dreapta ta.",
                     difficulty: Challange_1.ChallangeDifficulty.Hard
+                }, {
+                    text: "Ține trei cuburi de gheață în gură până se topesc.",
+                    difficulty: Challange_1.ChallangeDifficulty.Medium,
+                }, {
+                    text: "Mănâncă o lingură de muștar.",
+                    difficulty: Challange_1.ChallangeDifficulty.Easy
+                }, {
+                    text: "Oferă un masaj la picioare persoanei din dreapta ta.",
+                    difficulty: Challange_1.ChallangeDifficulty.Hard
+                }, {
+                    text: "Ține trei cuburi de gheață în gură până se topesc.",
+                    difficulty: Challange_1.ChallangeDifficulty.Medium,
+                }, {
+                    text: "Mănâncă o lingură de muștar.",
+                    difficulty: Challange_1.ChallangeDifficulty.Easy
+                }, {
+                    text: "Oferă un masaj la picioare persoanei din dreapta ta.",
+                    difficulty: Challange_1.ChallangeDifficulty.Hard
+                }, {
+                    text: "Ține trei cuburi de gheață în gură până se topesc.",
+                    difficulty: Challange_1.ChallangeDifficulty.Medium,
+                }, {
+                    text: "Mănâncă o lingură de muștar.",
+                    difficulty: Challange_1.ChallangeDifficulty.Easy
+                }, {
+                    text: "Oferă un masaj la picioare persoanei din dreapta ta.",
+                    difficulty: Challange_1.ChallangeDifficulty.Hard
+                }, {
+                    text: "Ține trei cuburi de gheață în gură până se topesc.",
+                    difficulty: Challange_1.ChallangeDifficulty.Medium,
+                }, {
+                    text: "Mănâncă o lingură de muștar.",
+                    difficulty: Challange_1.ChallangeDifficulty.Easy
+                }, {
+                    text: "Oferă un masaj la picioare persoanei din dreapta ta.",
+                    difficulty: Challange_1.ChallangeDifficulty.Hard
+                }, {
+                    text: "Ține trei cuburi de gheață în gură până se topesc.",
+                    difficulty: Challange_1.ChallangeDifficulty.Medium,
+                }, {
+                    text: "Mănâncă o lingură de muștar.",
+                    difficulty: Challange_1.ChallangeDifficulty.Easy
+                }, {
+                    text: "Oferă un masaj la picioare persoanei din dreapta ta.",
+                    difficulty: Challange_1.ChallangeDifficulty.Hard
                 }],
         };
     }

@@ -1,14 +1,14 @@
 <template>
 <div class="board-contents">
 	<div class="board-players">
-		<table>
-        <tr v-for="player in players" :key="player">
-          <td>
-            <span>{{ player.name }} <span :class="player.color"><p>{{ player.color }}</p></span> <br /></span> 
-            Puncte: {{ player.points }}
-          </td>
-        </tr>
-      </table>
+		<div class="border-bottom mb-0" v-for="player in players" :key="player">
+			<div class="form-group-row ml-3">
+				<h4> {{player.name}} </h4>
+				<div class="mr-3"> </div>
+				<h4 :class="player.color" class="color"> {{player.color}} </h4> 
+			</div>
+			<p class="mb-2 mt-3 ml-3"> Puncte rămase: {{player.points}} </p>
+		</div>
 	</div>
 		 <div class="board-wrapper" ref="wrapper">
 			 <div class="canvas-wrapper">
@@ -17,29 +17,83 @@
 		</div>
 		<div class="board-chat">
 			<br>
-			<p> Este ranul lui {{players[currentPlayerIndex].name}} </p>
-			<button :disabled="!isMyTurn" @click="moveCurrentPlayer" class="dice" :class="{disabled: disableDice}">dice</button>
-			<p v-if="currentDiceValue > 0">Rolled {{currentDiceValue}}</p>
+			<p> Este rândul lui {{players[currentPlayerIndex].name}} </p>
+			<button :disabled="!isMyTurn" @click="moveCurrentPlayer" class="dice" :class="{disabled: disableDice}">
+				<div v-if="currentDiceValue === 1">
+					<i class="fa-solid fa-dice-one fa-9x"></i>
+				</div>
+				<div v-else-if="currentDiceValue === 2">
+					<i class="fa-solid fa-dice-two fa-9x"></i>
+				</div>
+				<div v-else-if="currentDiceValue === 3">
+					<i class="fa-solid fa-dice-three fa-9x"></i>
+				</div>
+				<div v-else-if="currentDiceValue === 4">
+					<i class="fa-solid fa-dice-four fa-9x"></i>
+				</div>
+				<div v-else-if="currentDiceValue === 5">
+					<i class="fa-solid fa-dice-five fa-9x"></i>
+				</div>
+				<div v-else>
+					<i class="fa-solid fa-dice-six fa-9x"></i>
+				</div>
+			</button>
+			<div class="mb-4"></div>
+			<!-- <p v-if="currentDiceValue > 0">  {{currentDiceValue}}</p> -->
 			<Dialog v-if="togglePopup">
+				<h3 class="popup-text pt-4"> {{currentChallangeText}} </h3>
+				<div>
+					<h4 class="ml-4 pl-2 mt-6">
+						<div v-if="isMultiplayer">
+							Dificultate: {{currentChallangeDificultyMultiplayer}}
+						</div>
+						<div v-else>
+							Dificultate: {{challangeDifficulty}}
+						</div>
+					</h4>
+					<h4 class="ml-4 pl-2 ">
+						<div v-if="isMultiplayer">
+							Cost provocare: {{currentChallangeCostMultiplayer}} puncte
+						</div>
+						<div v-else>
+							Cost provocare: {{currentChallangeCost}} puncte
+						</div>
+					</h4>
+				</div>
 				<div class="popup">
-					<p class="popup-text"> {{currentChallangeText}} </p>
-					<Button @click="doneChallange" color="primary" size="medium" class="popup-btn-completed"> ACCEPTA PROVOCAREA </Button>
-					<Button @click="onDeclineChallange" color="red" size="medium" class="popup-btn-declined"> REFUZA PROVOCAREA </Button>
+					<div class="ml-4"></div>
+					<button class="btn accept mt-9 mr-7" :disabled="!isMyTurn" :class="{disabled: !isMyTurn}" @click="doneChallange">
+						<i class="fa-solid fa-check fa-2x"> </i>
+					</button>
+					<button class="btn decline ml-5 mt-9 " :disabled="!isMyTurn" :class="{disabled: !isMyTurn}" @click="onDeclineChallange"> 
+						<i class="fa-solid fa-xmark fa-2x"> </i>
+					</button>
+					<div class="mr-4"></div>
 				</div>
 			</Dialog>
-			<div class="chat-box" ref="chatBoxRef">
-				{{ canvasWidth }}
-				{{ canvasHeight }}
-				<div v-if="isMultiplayer">
-					<input @keyup.enter="sendMessage" type="text" v-model="message" placeholder="Type something...">
-					<button class="btn" @click="sendMessage"> trimite mesaj </button>
+			<Dialog v-if="toggleWinningScreen">
+				<div>
+					<h2 class="mb-8 winScreen">🎉 Căștigătorul este, <span class="winner">{{winner}}</span> ! 🎉</h2>
+					<button class="btn " @click="backToMainMenu"> Înapoi la ecranul principal </button>
 				</div>
-				<ul>
-					<li v-for="message in messages" :key="message">
-						{{message}}
-					</li>
-				</ul>
-			</div>
+			</Dialog>
+			<div class="form-group-row">
+				</div>
+				<div ref="chatBoxRefBoard">
+					<ul class="ul">
+						<li v-for="message in messages" :key="message">
+							<div class="pt-2"></div>
+							<p class="mt-0 mb-0">
+								{{message}}
+							</p> 
+						</li>
+					</ul>
+				</div>
+				<div class="form-group-row">
+				<div class="ml-6"></div>
+				<input class="" @keyup.enter="sendMessage" type="text" v-model="message" placeholder="Scrie ceva..." maxlength="50" >
+				<Button type="btn ml-1 pt-2 pb-2" @click="sendMessage"> <i class="fa-solid fa-paper-plane"></i> </Button>
+				</div>
 		</div>
 </div>	
 </template>
@@ -70,6 +124,10 @@ export default {
 		togglePopup: false,
 		eliminatedPlayersCount: 0,
 		disableDice: false,
+		toggleWinningScreen: false,
+		currentChallangeCost: '',
+		winner: '',
+		challangeDifficulty: '',
 		messages: [],
 		message: '',
 		grid: [[3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -101,6 +159,9 @@ export default {
 				this.currentPlayerIndex = payload.state.currentPlayerIndex;
 				this.currentDiceValue = payload.state.diceValue;
 				this.eliminatedPlayersCount = payload.state.eliminatedPlayersCount;
+				this.togglePopup = payload.state.popup;
+				this.toggleWinningScreen = payload.state.toggleWinnerDialog;
+				this.winner = payload.state.winner;
 				let updatedPlayers = [];
 				
 				for (const player of payload.state.players) {
@@ -120,14 +181,14 @@ export default {
 				if (payload.state.currentState === "game-over") {
 					this.disableDice = true;
 				}
-
+				
 				this.$store.dispatch('setCurrentGameState', payload.state);
 
 			});
 
-			this.sockett.on("new-message", (message) => {
-				console.log('new message payload', message);
-				this.chatBox(message);
+			this.sockett.on("new-message-board", (payload) => {
+				console.log('new message payload', payload);
+				this.chatBox(payload);
 			});
 
 			
@@ -152,13 +213,39 @@ export default {
 			return "There is a problem";
 		},
 
+		currentChallangeDificultyMultiplayer() {
+			if (this.currentGameState.currentChallange !== undefined) {
+				let diff = this.currentGameState.currentChallange.difficulty;
+				if (diff == 0) {
+					return "usor";
+				} else if (diff == 1) {
+					return "medie";
+				} else {
+					return "grea";
+				} 
+			}
+		},
+
+		currentChallangeCostMultiplayer() {
+			if (this.currentGameState.currentChallange !== undefined) {
+				let diff = this.currentGameState.currentChallange.difficulty;
+				if (diff == 0) {
+					return "100";
+				} else if (diff == 1) {
+					return "200";
+				} else {
+					return "300";
+				} 
+			}
+		},
+
 		isMyTurn() {
 			console.log("CurrentState", this.currentGameState['players']);
 			try {
 				return this.currentGameState['players'][this.currentGameState['currentPlayerIndex']].id === this.thisPlayer.id;
 			} catch (error) {
 				console.trace(error);
-				return false;
+				return false;		
 			}
 		}
 	},
@@ -255,6 +342,7 @@ export default {
 						if (this.isMultiplayer) {
 							console.log("playerrr", currentPlayer);
 							this.moveCurrentPlayerServer(currentPlayer, diceValue, this.currentPlayerIndex);
+						//	this.sockett.emit("toggle-popup", );
 						}
 						lastI = currentPlayer.lastI;
 						lastJ = currentPlayer.lastJ;
@@ -267,7 +355,10 @@ export default {
 
 				if (currentPlayer.i === 0 && currentPlayer.j === 0) {
 					console.log(currentPlayer.name + " won!!");
+					this.winner = currentPlayer.name;
+					this.toggleWinningScreen = true;
 					if (this.isMultiplayer) {
+						this.sockett.emit("game-over", currentPlayer);
 						this.sockett.emit("delete-room", this.$store.getters.getRoomName);
 					}
 					return;
@@ -278,6 +369,9 @@ export default {
 			
 			this.computeChallange(currentPlayer.i, currentPlayer.j); 
 			this.togglePopup = true;
+			if (this.isMultiplayer) {
+				this.sockett.emit("toggle-popup", true);
+			}
 		},
 
 		getPossibleMoves(i, j) {
@@ -310,12 +404,18 @@ export default {
 			if (i % 2 == 0 && i > 0) {
 				this.currentChallange = "red challange";
 				this.currentChallangeDificulty = 'red';
+				this.challangeDifficulty = 'grea';
+				this.currentChallangeCost = '300';
 			} else if (j % 3 == 0) {
 				this.currentChallange = "orange challange";
 				this.currentChallangeDificulty = 'orange';
+				this.challangeDifficulty = 'medie';
+				this.currentChallangeCost = '200';
 			} else {
 				this.currentChallange = "green challange"
 				this.currentChallangeDificulty = 'green';
+				this.challangeDifficulty = 'ușoară';
+				this.currentChallangeCost = '100';
 			}
 		},
 
@@ -329,9 +429,9 @@ export default {
             let challangeValue;
 			let currentPlayer = this.players[this.currentPlayerIndex];
 			if (this.currentChallangeDificulty === 'red') {
-				challangeValue = 200;
+				challangeValue = 300;
 			} else if (this.currentChallangeDificulty === 'orange') {
-				challangeValue = 150;
+				challangeValue = 200;
 			} else {
 				challangeValue = 100;
 			}
@@ -339,10 +439,11 @@ export default {
 			this.togglePopup = false;
 
 			this.checkPlayerPoints(currentPlayer);
-			this.nextAvailablePlayer();
+			this.nextAvailablePlayer(); 
 			if (this.isMultiplayer) {
 				console.log("game info din declineChallange", currentPlayer);
 				this.sockett.emit("decline-challange", currentPlayer);
+				this.sockett.emit("toggle-popup", false);
 			}
         },
 
@@ -352,6 +453,7 @@ export default {
 			if (this.isMultiplayer) {
 				console.log("game info din doneChallange", this.currentPlayerIndex);
 				this.sockett.emit("accept-challange");
+				this.sockett.emit("toggle-popup", false);
 			}
 		},
 
@@ -371,15 +473,17 @@ export default {
 					this.sockett.emit('eliminate-player', currentPlayer);
 				}
 				currentPlayer.points = 0; 
-				currentPlayer.name = `${currentPlayer.name} eliminated :(`;
+				currentPlayer.name = `${currentPlayer.name} - eliminat!`;
 				this.eliminatedPlayersCount += 1;
 				
 				if (this.players.length - 1 === this.eliminatedPlayersCount) {
 					for (let player of this.players) {
 						if (player.points != 0) {
 							console.log(player.name + " won!");
-							console.log("disable la dice in mm");
+							this.winner = player.name;
+							this.toggleWinningScreen = true;
 							this.disableDice = true;
+
 							if (this.isMultiplayer) { 
 								this.sockett.emit("game-over", player);
 								this.sockett.emit("delete-room", this.$store.getters.getRoomName);
@@ -396,22 +500,27 @@ export default {
 		},
 
 		sendMessage() {
-			this.sockett.emit("send-message", this.roomName, this.message);
+			console.log("salut");
+			this.sockett.emit("send-message", this.roomName, this.message, true);
 			this.message = '';
 		},
 
-		chatBox(msgBody) {
-			console.log(msgBody);
+		chatBox(payload) {
+			console.log(payload);
 			// if (msgBody.optionalMessage !== undefined) {
 			// 	this.messages.push(msgBody.optionalMessage);
 			// }
-			this.messages.push(msgBody);
+			this.messages.push(payload.message);
 			this.$nextTick( () => {
-				let chatBoxRef = this.$refs.chatBoxRef;
-				if (chatBoxRef !== null) {
-					chatBoxRef.scrollTop = chatBoxRef.scrollHeight; 
+				let chatBoxRefBoard = this.$refs.chatBoxRefBoard;
+				if (chatBoxRefBoard !== undefined) {
+					chatBoxRefBoard.scrollTop = chatBoxRefBoard.scrollHeight; 
 				}
 			});
+		},
+
+		backToMainMenu() {
+			this.$router.push("/");
 		},
 
 		start() {

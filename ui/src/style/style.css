@@ -77,6 +77,22 @@ p, a, input, label {
 .btn:hover {
   background-color: #016fe8;
 }
+.btn.decline {
+  background-color: red;
+}
+.btn.decline:hover {
+  background-color: #db0000;
+}
+.btn.accept {
+  background-color: green;
+}
+.btn.accept:hover {
+  background-color: #006c00;
+}
+.btn.disabled {
+  pointer-events: none;
+  background-color: grey;
+}
 
 .secondary-btn {
   display: block;
@@ -582,15 +598,46 @@ input {
 .board-game {
   display: flex;
   height: 100vh;
+  overflow: hidden;
 }
 .board-game .board-contents {
   display: flex;
   flex-direction: row;
   height: 100vh;
   flex-basis: 100%;
+  background-image: linear-gradient(to right top, #ffffff, #fbfbfe, #f5f7fe, #eef4fd, #e6f1fc, #e6f1fc, #e6f1fc, #e6f1fc, #eef4fd, #f5f7fe, #fbfbfe, #ffffff);
 }
 .board-game .board-contents .board-players {
   flex-basis: 15%;
+}
+.board-game .board-contents .board-players .yellow {
+  -webkit-text-stroke: 1px #ababab;
+  color: yellow;
+}
+.board-game .board-contents .board-players .indigo {
+  color: indigo;
+}
+.board-game .board-contents .board-players .fuchsia {
+  color: fuchsia;
+}
+.board-game .board-contents .board-players .tan {
+  color: tan;
+}
+.board-game .board-contents .board-players .blue {
+  color: blue;
+}
+.board-game .board-contents .board-players .lightBlue {
+  color: lightblue;
+}
+.board-game .board-contents .board-players .lightGreen {
+  color: lightgreen;
+}
+.board-game .board-contents .board-players .teal {
+  color: teal;
+}
+.board-game .board-contents .board-players .border-bottom {
+  border-bottom: 1px solid grey;
+  width: 100%;
 }
 .board-game .board-contents .board-wrapper {
   padding: 0;
@@ -611,6 +658,9 @@ input {
   display: flex;
   flex-basis: 20%;
   flex-direction: column;
+}
+.board-game .disabled {
+  pointer-events: none;
 }
 
 .color-red {
@@ -663,10 +713,48 @@ body {
   margin: 0;
   height: 100vh;
   background-color: #ccd4d9;
+  background-image: linear-gradient(to right top, #ffffff, #fbfbfe, #f5f7fe, #eef4fd, #e6f1fc, #e6f1fc, #e6f1fc, #e6f1fc, #eef4fd, #f5f7fe, #fbfbfe, #ffffff);
 }
 
 .ul {
-  line-height: 2px;
+  background-image: linear-gradient(to bottom, #ffffff, #fefefe, #fdfdfd, #fcfcfc, #fbfbfb);
+  border: 1px solid #d1cece;
+  list-style-type: none;
+  margin-right: 20px;
+  overflow-y: auto;
+  overflow-x: auto;
+  height: 470px;
+}
+.ul li {
+  padding: 3px;
+}
+
+.dice {
+  display: flex;
+  width: 100px;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  border: none;
+  background: transparent;
+}
+
+.popup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 500px;
+  height: 300px;
+}
+
+.popup-text {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.winner {
+  color: #00FF0D;
 }
 
 /*# sourceMappingURL=style.css.map */

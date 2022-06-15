@@ -17,6 +17,25 @@ $button-border-radius: 5px;
     &:hover{
         background-color: darken($color-primary, 4%);
     }
+
+    &.decline {
+        background-color: red;
+        &:hover{
+            background-color: darken(red, 7%);
+        }
+    }
+
+    &.accept {
+        background-color: green;
+        &:hover{
+            background-color: darken(green, 4%);
+        }
+    }
+
+    &.disabled {
+        pointer-events: none;
+        background-color: grey;
+    }
 }
 
 .secondary-btn {

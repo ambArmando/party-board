@@ -30,7 +30,8 @@ enum GameClientEvents {
     leaveGame = 'leave-game',
     eliminatePlayer = 'eliminate-player',
     gameOver = 'game-over',
-    addChallanges = 'add-challanges'
+    addChallanges = 'add-challanges',
+    togglePopup = 'toggle-popup'
 }
 
 enum GameServerEvents {
@@ -48,16 +49,19 @@ export class GameSession implements IGameSession {
     private io: Socket
     private players: Array<Player> = [];
     private roomName: string;
-    private roomSize: number = 3;
+    private roomSize: number = 8;
     private messageBody: string = "";
     private id: number = 0;
     private currentPlayerIndex: number = 0;
     private diceValue: number = 0;
     private eliminatedPlayersCount: number = 0;
-    private colors: Array<string> = ['fuchsia', 'purple', 'lightBlue', 'lightgreen', 'tan', 'yellow', 'teal', 'indigo'];
+    private colors: Array<string> = ['fuchsia', 'lightBlue', 'lightGreen', 'tan', 'yellow', 'teal', 'indigo', 'blue'];
     private errorMessage: string = "";
     private currentChallange: Challange;
     private diceCounter: number = 1;
+    private togglePopup: boolean = false;
+    private toggleWinnerDialog: boolean = false;
+    private winner: string = "";
 
     // Compositions 
     private challangeManager: IChallangeManager = new ChallangeManager();
@@ -84,7 +88,10 @@ export class GameSession implements IGameSession {
             currentPlayerIndex: this.currentPlayerIndex,
             diceValue: this.diceValue,
             eliminatedPlayersCount: this.eliminatedPlayersCount,
-            currentChallange: this.currentChallange
+            currentChallange: this.currentChallange,
+            popup: this.togglePopup,
+            toggleWinnerDialog: this.toggleWinnerDialog,
+            winner: this.winner,
         };
     }
 
@@ -131,12 +138,17 @@ export class GameSession implements IGameSession {
     //     this.io.to(this.roomName).emit('new-message', body);
     // }
 
-    private sendMessage(message: string, username?: string) {
+    private sendMessage(message: string, username?: string, isFromBoard?: boolean) {
         const payload = {
             message: message,
             username: username,
         }
-        this.io.to(this.roomName).emit('new-message', payload);
+        console.log(isFromBoard);
+        if (isFromBoard) {
+            this.io.to(this.roomName).emit('new-message-board', payload);
+        } else {
+            this.io.to(this.roomName).emit('new-message', payload);
+        }
     }
 
     private sendErrorMessage(socket: string, errorMessage: string) {
@@ -195,6 +207,7 @@ export class GameSession implements IGameSession {
     }
 
     private handleAcceptChallange() {
+        this.togglePopup = false;
         this.getNextAvailablePlayer();
         this.informPlayers();
     }
@@ -205,6 +218,7 @@ export class GameSession implements IGameSession {
                 player.points = currentPlayer.points;
             }
         }
+        this.togglePopup = false;
         this.getNextAvailablePlayer();
         this.informPlayers();
     }
@@ -212,7 +226,7 @@ export class GameSession implements IGameSession {
     private handleEliminatePlayer(eliminatedPlayer: Player) {
         for (const player of this.players) {
             if (player.name === eliminatedPlayer.name) {
-                player.name = player.name + " " + "eliminated!";
+                player.name = player.name + " - " + "eliminat!";
                 player.points = 0;
                 this.eliminatedPlayersCount += 1;
             }
@@ -223,10 +237,17 @@ export class GameSession implements IGameSession {
     private handleGameOver(winner: Player) {
         for (const player of this.players) {
             if (player.name === winner.name) {
-                player.name = player.name + " " + "WON!";
+                this.winner = player.name;
+               // player.name = player.name + " " + "WON!";
             }
         }
+        this.toggleWinnerDialog = true;
         this.currentState = GameStates.gameOver;
+        this.informPlayers();
+    }
+
+    private handleTogglePopup(value: boolean) {
+        this.togglePopup = value;
         this.informPlayers();
     }
 
@@ -267,13 +288,18 @@ export class GameSession implements IGameSession {
             console.log("challange array de la player: ", challangesList, playerName);
             this.handleAddChallanges(challangesList, playerName);
         });
+
+        socket.on(GameClientEvents.togglePopup, (value) => {
+            console.log("value din server", value);
+            this.handleTogglePopup(value);
+        })
     }
 
     /** Public api */
     addPlayer(playerName: string, socket: Socket) {
 
         if (this.currentState !== GameStates.waitingForPlayersToJoin) {
-            this.errorMessage = "Jocul in care incerci să intri a inceput deja!";
+            this.errorMessage = "Jocul este în desfășurare în această cameră!";
             this.sendErrorMessage(socket.id, this.errorMessage);
             throw new GameAlreadyStartedException();
         }
@@ -305,7 +331,7 @@ export class GameSession implements IGameSession {
             id: this.getID(),
             name: playerName,
             color: this.getRandomColor(),
-            points: 300,
+            points: 500,
             position: {i: 9, j: 9},
             lastPosition: {lastI: null, lastJ: null},
             socket: socket
@@ -331,9 +357,9 @@ export class GameSession implements IGameSession {
         this.informPlayers(GameServerEvents.playerLeft);
     }
 
-    message(message: string, socket: Socket) {
+    message(message: string, socket: Socket, isFromBoard?: boolean) {
         this.messageBody = `${socket.data.username}: ${message}`;
-        this.sendMessage(this.messageBody, socket.data.username);
+        this.sendMessage(this.messageBody, socket.data.username, isFromBoard);
     }
 
 }

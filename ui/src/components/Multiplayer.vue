@@ -34,10 +34,10 @@
 						<i class="fa-solid fa-house form-group-row defaultCursor"> <span> <p class="pl-3"> Cameră: {{roomName}}</p> </span> </i>
 					</div>
 					<div class="second align-right">
-						<ul class="ul">
+						<ul>
 							<i class="fa-solid fa-people-roof big defaultCursor pl-4"> </i>
 							<li class="pr-2" v-for="player in connectedPlayersNames" :key="player">
-								<h5 class="pr-1">{{player}}</h5>
+								<h5 class="pr-1 mt-3 mb-0">{{player}}</h5>
 							</li>
 						</ul>
 					</div>
@@ -84,7 +84,7 @@
 						</div>
 						<div v-if="challangeIndex === index">
 							<div class="pl-3 ml-3" v-if="modifyChallange">
-								<input class="" type="text" v-model="modifyChallangeModel" placeholder="Schimba provocarea..." maxlength="40">
+								<input @keyup.enter="saveModifiedChallange(index)" type="text" v-model="modifyChallangeModel" placeholder="Schimba provocarea..." maxlength="40">
 								<div class="form-group-row">
 									<input type="radio" id="easy" value="Easy" v-model="pickedDifficulty">
 									<label for="easy">Easy</label>
@@ -140,7 +140,7 @@ export default {
 				connectedPlayersNames: [],
 				//randomColors: ['fuchsia', 'purple', 'lightBlue', 'lightgreen', 'tan', 'yellow', 'teal', 'indigo'],
 				errorMessage: '',
-				disablePlay: false,
+				disablePlay: true,
 				challange: '',
 				playerChallanges: [],
 				modifyChallange: false,
@@ -160,10 +160,9 @@ export default {
 			this.createRoomBtnPressed = true;
 			this.connectedPlayers = payload.state.players;
 			this.populatePlayerNamesArray(payload.state.players);
-			//asta trebuie pus inapoi
-			// if (payload.state.players.length > 1) {
-			// 	this.disablePlay = false;
-			// }
+			if (payload.state.players.length > 1) {
+				this.disablePlay = false;
+			}
 
 			if (payload.event === "start-game") {
 				this.$store.dispatch('setPlayersArray', this.connectedPlayers);

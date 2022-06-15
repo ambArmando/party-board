@@ -50,8 +50,8 @@ export class LobbyManager implements ILobbyManager {
         this.logger.log(`Left room ${roomName} -> ${playerName}`);
     }
 
-    message(roomName: string, message: string, socket: Socket) {
-        this._gameSessions[roomName].message(message, socket);
+    message(roomName: string, message: string, socket: Socket, isFromBoard?: boolean) {
+        this._gameSessions[roomName].message(message, socket, isFromBoard);
         this.logger.log(`PLayer ${socket.data.username} said -> ${message} in room ${roomName}`);
     }
 

@@ -58,9 +58,9 @@ io.on('connection', (socket: Socket) => {
         }
     });
 
-    socket.on('send-message', (roomName: string, message: string) => {
+    socket.on('send-message', (roomName: string, message: string, isFromBoard?: boolean) => {
         try {
-            lobbyManager.message(roomName, message, socket);
+            lobbyManager.message(roomName, message, socket, isFromBoard);
         } catch (e: any) {
             console.error('Error: ', e);
         }

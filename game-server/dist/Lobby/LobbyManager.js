@@ -40,8 +40,8 @@ class LobbyManager {
         this._gameSessions[roomName].removePlayer(playerName, socket);
         this.logger.log(`Left room ${roomName} -> ${playerName}`);
     }
-    message(roomName, message, socket) {
-        this._gameSessions[roomName].message(message, socket);
+    message(roomName, message, socket, isFromBoard) {
+        this._gameSessions[roomName].message(message, socket, isFromBoard);
         this.logger.log(`PLayer ${socket.data.username} said -> ${message} in room ${roomName}`);
     }
     deleteRoom(roomName) {

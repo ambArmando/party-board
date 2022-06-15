@@ -1,3 +1,13 @@
 .ul {
-    line-height: 2px;
+    background-image: linear-gradient(to bottom, #ffffff, #fefefe, #fdfdfd, #fcfcfc, #fbfbfb);
+    border: 1px solid rgb(209, 206, 206);
+    list-style-type: none;
+    margin-right: 20px;
+    overflow-y: auto;
+    overflow-x: auto;
+    height: 470px;
+
+    li {
+        padding: 3px;
+    }
 }
