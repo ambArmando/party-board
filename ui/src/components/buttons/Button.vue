@@ -1,9 +1,7 @@
 <template>
-  <div>
       <button :class="`${color} ${size} ${type}`">
           <slot></slot>   
       </button>
-  </div>
 </template>
 
 <script>

@@ -7,5 +7,13 @@ $input-padding: 5px;
 input {
     border-radius: $input-radius;
     padding: $input-padding;
+    box-sizing: border-box;
+    &[type=text] {
+        min-height: 34px;
+    }
+    &[type=radio] {
+        max-width: 20px;
+        min-width: 20px;
+    }
 }
 

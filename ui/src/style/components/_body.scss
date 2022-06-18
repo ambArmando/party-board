@@ -5,7 +5,17 @@
 body {
     margin: 0;
     height: 100vh;
+    //background-color: red;
     background-color: $color-background-light;
     background-image: linear-gradient(to right top, #ffffff, #fbfbfe, #f5f7fe, #eef4fd, #e6f1fc, #e6f1fc, #e6f1fc, #e6f1fc, #eef4fd, #f5f7fe, #fbfbfe, #ffffff);
 
+}
+
+#app {
+    height: 100vh;
+    overflow: auto;
+    display: flex;
+    /* align-content: center; */
+    flex-direction: column;
+    justify-content: center;
 }

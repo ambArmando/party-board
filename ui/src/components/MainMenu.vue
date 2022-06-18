@@ -8,12 +8,14 @@
                     <td v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class=""> X </td>
                 </tr>
             </table>-->
-
-            <div class="form-group-row mb-3" v-for="(player, index) in players" :key="player" >
-                <label class="pr-3">JUCĂTOR {{index + 1}}:</label> 
-                <input class="mr-2" type="text" placeholder=" Introdu un nume..." v-model="player.name">
-                <i  v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class="fa-solid fa-xmark color-red big"></i>
-            </div>
+            <div class="form-list medium">
+                <div class="form-group-row mb-3" v-for="(player, index) in players" :key="player" >
+                    <label class="pr-3">JUCĂTOR {{index + 1}}:</label> 
+                    <input class="mr-2" type="text" placeholder=" Introdu un nume..." v-model="player.name">
+                    <i  v-if="players.length < 3 ? false : true" @click="removePlayerById(player.id)" class="fa-solid fa-xmark color-red big"></i>
+                </div>
+            </div>      
+            
 
             <div class="pb-4"></div>
 

@@ -1,0 +1,9 @@
+@import '../constants/colors';
+@import '../constants/fonts';
+.vertical-line {
+    display: block;
+    background-color: $color-background-light;
+    height: 100%;
+    width: 3px;
+    border-radius: 3px;
+}

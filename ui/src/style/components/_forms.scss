@@ -10,3 +10,20 @@
     input {
     }
 }
+
+.form-list {
+    padding-right: 10px;
+    overflow-y: auto;
+
+    &.small {
+        max-height: 200px;
+        &.fixed-height {
+            min-height: 200px;
+        }
+    }
+
+    &.medium {
+        max-height: 250px;
+    }
+}
+

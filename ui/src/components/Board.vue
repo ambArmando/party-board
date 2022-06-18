@@ -77,10 +77,9 @@
 					<button class="btn " @click="backToMainMenu"> Înapoi la ecranul principal </button>
 				</div>
 			</Dialog>
-			<div class="form-group-row">
-				</div>
+			<div v-if="isMultiplayer">
 				<div ref="chatBoxRefBoard">
-					<ul class="ul">
+					<ul class="ul p-0">
 						<li v-for="message in messages" :key="message">
 							<div class="pt-2"></div>
 							<p class="mt-0 mb-0">
@@ -90,10 +89,11 @@
 					</ul>
 				</div>
 				<div class="form-group-row">
-				<div class="ml-6"></div>
-				<input class="" @keyup.enter="sendMessage" type="text" v-model="message" placeholder="Scrie ceva..." maxlength="50" >
-				<Button type="btn ml-1 pt-2 pb-2" @click="sendMessage"> <i class="fa-solid fa-paper-plane"></i> </Button>
+					<!--<div class="ml-6"></div>-->
+					<input style="width: 100%;" @keyup.enter="sendMessage" type="text" v-model="message" placeholder="Scrie ceva..." maxlength="50" >
+					<Button class="ml-2 pr-2 pl-2" type="btn btn-icon" @click="sendMessage"> <i class="fa-solid fa-paper-plane"></i> </Button>
 				</div>
+			</div>
 		</div>
 </div>	
 </template>
@@ -313,7 +313,7 @@ export default {
 			this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 			this.renderBoard();
 			this.renderPlayers();
-			this.renderDebug();
+			//this.renderDebug();
 		},
 
 		moveCurrentPlayer() {

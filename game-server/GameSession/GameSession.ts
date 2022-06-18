@@ -331,7 +331,7 @@ export class GameSession implements IGameSession {
             id: this.getID(),
             name: playerName,
             color: this.getRandomColor(),
-            points: 500,
+            points: 1000,
             position: {i: 9, j: 9},
             lastPosition: {lastI: null, lastJ: null},
             socket: socket

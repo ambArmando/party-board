@@ -18,4 +18,8 @@ $centered-menu-backgroud-color: white;
     min-width: $centered-menu-max-width;
     background-color: $centered-menu-backgroud-color;
     @include shadow-default;
+
+    &.wide {
+        min-width: 80%;
+    }
 }
